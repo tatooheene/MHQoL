@@ -33,7 +33,7 @@ mhqol_utilities_to_states <- function(utilities,
 
 
   # Read in utility dataset
-  df_utilities_countries <- readRDS("data/df_utilities_countries.RDS") ##AANPASSEN
+  df_utilities_countries <- mhqol::df_utilities_countries
 
   # Convert the different input types into a dataframe
   convert_to_df <- function(utilities){
