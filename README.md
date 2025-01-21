@@ -7,8 +7,10 @@ It provides tools to compute standardized scores, use valueset and generate insi
 # Installation
 You can install the development version of tatooheene from GitHub with:
 
-# install.packages("remotes")
+```{r}
+install.packages("remotes")
 remotes::install_github("tatooheene/mqhol")
+```
 
-About the data
+# About the data
 The package is based on the paper, manual and  of Krugten et al. (2022, 2024)
