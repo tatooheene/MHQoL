@@ -4,7 +4,7 @@ This toolkit is designed to facilitate the assessment, analysis and visualizatio
 
 It provides tools to compute standardized scores, use valueset and generate insightful visualizations, enabling researchers, clinicians and policymakers to better understand and improve mental health outcomes
 
-Installation
+# Installation
 You can install the development version of tatooheene from GitHub with:
 
 # install.packages("remotes")
