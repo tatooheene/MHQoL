@@ -16,13 +16,15 @@
 #' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
 #' If FALSE, the function will stop and throw an error.
 #'
+#' @param retain_old_variables If TRUE, the function will retain the old variables in the output.
+#'
 #' @return A dataframe containing the utilities based on the MHQoL valuesets
 #'
 #' @keywords MHQoL, Utility, Dimensions
 #'
 #' @examples
 #' # Example usage of the mhqol_utilities function
-#' # Get the utility based on a character vector and calculate the total utility, not all dimensions are present
+#' # Get the utility based on a numeric vector and calculate the total utility, not all dimensions are present
 #' mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore.invalid = TRUE)
 #'
 #' # Get the utility based on a dataframe and calculate the average utility
@@ -40,7 +42,8 @@ mhqol     <- function(dimensions,
                       country = "Netherlands",
                       metric = c("average", "total"),
                       ignore.invalid = FALSE,
-                      ignore.NA = TRUE) {
+                      ignore.NA = TRUE,
+                      retain_old_variables = FALSE) {
 
 
   # Check if metric is a single value
@@ -59,7 +62,7 @@ mhqol     <- function(dimensions,
                            country = country,
                            ignore.invalid = ignore.invalid,
                            ignore.NA = ignore.NA,
-                           retain_old_variables = FALSE)
+                           retain_old_variables = retain_old_variables)
 
 
   # If the chosen metric is "total", provide a total score per participant

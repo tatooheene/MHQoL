@@ -48,10 +48,16 @@ mhqol_LSS <- function(dimensions,
 
   # Check whether the input are characters or numeric
 
-data <-  mhqol::mhqol_scores(dimensions = dimensions,
+  if(all(sapply(dimensions, is.character))){
+data <-  mhqol::mhqol_states_to_scores(dimensions = dimensions,
                ignore.invalid = ignore.invalid,
                ignore.NA = ignore.NA,
                retain_old_variables = FALSE)
+return(data)
+
+  }else if((all(sapply(dimensions, is.numeric)))){
+  return(data)
+}
 
 
     # If the chosen metric is "total", provide a total score per participant
