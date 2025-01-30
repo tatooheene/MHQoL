@@ -98,7 +98,7 @@ server <- function(input, output, session){
 
 
     # Recalculate data into scores/utilities based on the input
-    data_mhqol <- mhqol(dimensions = data[, 3:9],
+    data_mhqol <- mhqol::mhqol(dimensions = data[, 3:9],
                          country = input$country_decision,
                          metric = "total",
                          ignore.invalid = input$invalid_decision,
