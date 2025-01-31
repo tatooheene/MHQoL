@@ -16,6 +16,12 @@ ui <-navbarPage(title = "MHQoL",
 
 
     sidebarPanel(
+
+      # Centered action button at the top
+      div(style = "text-align: center; margin-bottom: 20px;",
+          actionButton("create_plate", "Create the Plate 🍽", class = "btn-primary btn-lg")),
+
+
         fileInput("file", "Choose a file (CSV, Excel, RDS)",
                 accept = c(".csv", ".xlsx", ".rds")),
 
@@ -24,6 +30,7 @@ ui <-navbarPage(title = "MHQoL",
 
         h4("Example data"),
         p("MHQoL example data scores:", a(img(src="images/icon-excel.png", height = 24, width = 24), href="example-data/example_data_scores.xlsx", target="_blank"), style="margin-bottom:0"),
+        p("MHQoL example data text:", a(img(src="images/icon-excel.png", height = 24, width = 24), href="example-data/example_data_text.xlsx", target="_blank"), style="margin-bottom:0"),
         hr(),
 
         radioButtons("output_decision",
@@ -52,8 +59,6 @@ ui <-navbarPage(title = "MHQoL",
     uiOutput("download_buttons")
     )
   ),
-
-tabPanel(title = "The MHQOl plate🍽️"),
 
 tabPanel(title = "The reversed MHQoL Cooker 🔄")
 
@@ -185,6 +190,7 @@ server <- function(input, output, session){
         writexl::write_xlsx(uploaded_data(), file)
       }
     )
+
 
 }
 

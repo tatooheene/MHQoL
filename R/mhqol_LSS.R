@@ -51,7 +51,7 @@ mhqol_LSS <- function(dimensions,
   }
 
   # Compute LSS scores
-  data <- data |>
+  data <- data %>%
     dplyr::mutate(
       LSS = rowSums(dplyr::across(where(is.numeric)), na.rm = TRUE)
     )
@@ -62,7 +62,7 @@ mhqol_LSS <- function(dimensions,
   }
 
   # If metric is "average", compute mean scores for each dimension
-  average_scores <- data |>
+  average_scores <- data %>%
     dplyr::summarize(across(where(is.numeric), mean, na.rm = TRUE))
 
   return(average_scores)
