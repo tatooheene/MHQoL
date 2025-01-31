@@ -7,8 +7,7 @@ library(mhqol)
 ################################################################
 #                       USER INTERFACE                         #
 ################################################################
-ui <- fluidPage(
-  navbarPage(title = "MHQoL"),
+ui <-navbarPage(title = "MHQoL",
 
 
 # First panel to recalculate dimensions into scores or utilities ----------
@@ -52,7 +51,12 @@ ui <- fluidPage(
     # Download buttons
     uiOutput("download_buttons")
     )
-  )
+  ),
+
+tabPanel(title = "The MHQOl plate🍽️"),
+
+tabPanel(title = "The reversed MHQoL Cooker 🔄")
+
 
 
 
@@ -111,6 +115,9 @@ server <- function(input, output, session){
                                    metric = "total",
                                    ignore.invalid = input$invalid_decision,
                                    ignore.NA = input$NA_decision)
+
+
+
     } else if(input$output_decision == "Utilities"){
     data_mhqol <- mhqol::mhqol(dimensions = data[, 3:9],
                                metric = "total",
