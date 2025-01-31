@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(DT)
+library(writexl)
 library(mhqol)
 
 ################################################################
@@ -46,8 +47,12 @@ ui <- fluidPage(
                      selected = "FALSE")
       ),
 
-    mainPanel(DTOutput("data_output"))
+    mainPanel(DTOutput("data_output"),
+
+    # Download buttons
+    uiOutput("download_buttons")
     )
+  )
 
 
 
@@ -98,14 +103,31 @@ server <- function(input, output, session){
 
 
     # Recalculate data into scores/utilities based on the input
+
+    # If input$output_decision = Scores
+
+    if(input$output_decision == "Scores"){
+    data_mhqol <- mhqol::mhqol_LSS(dimensions = data[, 3:9],
+                                   metric = "total",
+                                   ignore.invalid = input$invalid_decision,
+                                   ignore.NA = input$NA_decision)
+    } else if(input$output_decision == "Utilities"){
     data_mhqol <- mhqol::mhqol(dimensions = data[, 3:9],
-                         country = input$country_decision,
-                         metric = "total",
-                         ignore.invalid = input$invalid_decision,
-                         ignore.NA = input$NA_decision,
-                         retain_old_variables = TRUE)
+                               metric = "total",
+                               country = input$country_decision,
+                               ignore.invalid = input$invalid_decision,
+                               ignore.NA = input$NA_decision)
+
+    data_mhqol <- data_mhqol |>
+      dplyr::mutate(utility = round(utility, 3))
+
+    }
+
+
+    # If input$ouput_decision = "Utilities"
 
     data <- cbind(descriptives, data_mhqol)
+
 
 
     return(data)
@@ -130,6 +152,32 @@ server <- function(input, output, session){
       req(uploaded_data())
       datatable(uploaded_data(), options = list(pageLength = 15))
     })
+
+    # Conditionally show the download buttons when the table is rendered
+    output$download_buttons <- renderUI({
+      req(uploaded_data())  # Ensure data exists before showing buttons
+
+      tagList(
+        downloadButton("download_rds", "Download as RDS"),
+        downloadButton("download_excel", "Download as Excel")
+      )
+    })
+
+    # Download handler for RDS
+    output$download_rds <- downloadHandler(
+      filename = function() { "cooked_data.rds" },
+      content = function(file) {
+        saveRDS(uploaded_data(), file)
+      }
+    )
+
+    # Download handler for Excel
+    output$download_excel <- downloadHandler(
+      filename = function() { "cooked_data.xlsx" },
+      content = function(file) {
+        writexl::write_xlsx(uploaded_data(), file)
+      }
+    )
 
 }
 

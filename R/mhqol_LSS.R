@@ -35,67 +35,35 @@ mhqol_LSS <- function(dimensions,
                       ignore.invalid = FALSE,
                       ignore.NA = TRUE) {
 
+  # Ensure metric is a single valid value
+  metric <- match.arg(metric)
 
-  # Check if metric is a single value
-  if (length(metric) != 1) {
-    stop("The 'metric' argument must be a single value. Please choose either 'total' or 'average' ")
+  # Convert character dimensions to numeric scores
+  if (all(sapply(dimensions, is.character))) {
+    data <- mhqol::mhqol_states_to_scores(dimensions = dimensions,
+                                          ignore.invalid = ignore.invalid,
+                                          ignore.NA = ignore.NA,
+                                          retain_old_variables = FALSE)
+  } else if (all(sapply(dimensions, is.numeric))) {
+    data <- as.data.frame(dimensions)  # Ensure it's a dataframe
+  } else {
+    stop("The 'dimensions' argument must be either all numeric or all character values.")
   }
 
-  # Check if metric is either "total" or "average"
-  if (!metric %in% c("total", "average")) {
-    stop("Invalid metric chosen. Please choose either 'total' or 'average'.")
-  }
+  # Compute LSS scores
+  data <- data |>
+    dplyr::mutate(
+      LSS = rowSums(dplyr::across(where(is.numeric)), na.rm = TRUE)
+    )
 
-  # Check whether the input are characters or numeric
-
-  if(all(sapply(dimensions, is.character))){
-data <-  mhqol::mhqol_states_to_scores(dimensions = dimensions,
-               ignore.invalid = ignore.invalid,
-               ignore.NA = ignore.NA,
-               retain_old_variables = FALSE)
-return(data)
-
-  }else if((all(sapply(dimensions, is.numeric)))){
-  return(data)
-}
-
-
-    # If the chosen metric is "total", provide a total score per participant
-    if(metric == "total"){
-      data <- data |>
-        dplyr::mutate(
-          LSS = rowSums(dplyr::across(dplyr::everything()), na.rm = TRUE)
-        )
-
+  # If metric is "total", return the dataframe
+  if (metric == "total") {
     return(data)
-
-    # If the chosen metric is "average", provide an average score per dimension and overall
-    } else if(metric == "average"){
-
-      data <- data |>
-        dplyr::mutate(
-          LSS = rowSums(dplyr::across(dplyr::everything()), na.rm = TRUE)
-        )
-
-      SI_LSS_average <- mean(data$SI_s, na.rm = TRUE)
-      IN_LSS_average <- mean(data$IN_s, na.rm = TRUE)
-      MO_LSS_average <- mean(data$MO_s, na.rm = TRUE)
-      RE_LSS_average <- mean(data$RE_s, na.rm = TRUE)
-      DA_LSS_average <- mean(data$DA_s, na.rm = TRUE)
-      PH_LSS_average <- mean(data$PH_s, na.rm = TRUE)
-      FU_LSS_average <- mean(data$FU_s, na.rm = TRUE)
-      LSS_average <- mean(data$LSS, na.rm = TRUE)
-
-      df <- data.frame(SI_LSS_average, IN_LSS_average, MO_LSS_average, RE_LSS_average, DA_LSS_average, PH_LSS_average, FU_LSS_average, LSS_average)
-
-      return(df)
-    }
-
   }
 
+  # If metric is "average", compute mean scores for each dimension
+  average_scores <- data |>
+    dplyr::summarize(across(where(is.numeric), mean, na.rm = TRUE))
 
-
-
-
-
-
+  return(average_scores)
+}

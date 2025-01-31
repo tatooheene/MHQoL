@@ -9,8 +9,7 @@ mhqol(
   country = "Netherlands",
   metric = c("average", "total"),
   ignore.invalid = FALSE,
-  ignore.NA = TRUE,
-  retain_old_variables = FALSE
+  ignore.NA = TRUE
 )
 }
 \arguments{
@@ -25,8 +24,6 @@ If FALSE, the function will stop and throw an error.}
 
 \item{ignore.NA}{If TRUE, the function will ignore NA values in the input data.
 If FALSE, the function will stop and throw an error.}
-
-\item{retain_old_variables}{If TRUE, the function will retain the old variables in the output.}
 }
 \value{
 A dataframe containing the utilities based on the MHQoL valuesets

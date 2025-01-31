@@ -16,7 +16,6 @@
 #' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
 #' If FALSE, the function will stop and throw an error.
 #'
-#' @param retain_old_variables If TRUE, the function will retain the old variables in the output.
 #'
 #' @return A dataframe containing the utilities based on the MHQoL valuesets
 #'
@@ -42,8 +41,7 @@ mhqol     <- function(dimensions,
                       country = "Netherlands",
                       metric = c("average", "total"),
                       ignore.invalid = FALSE,
-                      ignore.NA = TRUE,
-                      retain_old_variables = FALSE) {
+                      ignore.NA = TRUE) {
 
 
   # Check if metric is a single value
@@ -62,7 +60,7 @@ mhqol     <- function(dimensions,
                            country = country,
                            ignore.invalid = ignore.invalid,
                            ignore.NA = ignore.NA,
-                           retain_old_variables = retain_old_variables)
+                           retain_old_variables = FALSE)
 
 
   # If the chosen metric is "total", provide a total score per participant
