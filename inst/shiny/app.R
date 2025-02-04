@@ -3,6 +3,7 @@ library(tidyverse)
 library(DT)
 library(writexl)
 library(mhqol)
+library(fmsb)
 
 ################################################################
 #                       USER INTERFACE                         #
@@ -40,18 +41,7 @@ ui <-navbarPage(title = "MHQoL",
         selectInput("country_decision",
                      label = "Country",
                     choices = "Netherlands",
-                    selected = "Netherlands"),
-
-        radioButtons("NA_decision",
-                     label = "Take NA's into account",
-                     choices = c("TRUE", "FALSE"),
-                     selected = "TRUE"),
-
-        radioButtons("invalid_decision",
-                     label = "Take invalid cols into account",
-                     choices = c("TRUE", "FALSE"),
-                     selected = "FALSE")
-      ),
+                    selected = "Netherlands")),
 
     mainPanel(DTOutput("data_output"),
 
@@ -118,8 +108,8 @@ server <- function(input, output, session){
     if(input$output_decision == "Scores"){
     data_mhqol <- mhqol::mhqol_LSS(dimensions = data[, 3:9],
                                    metric = "total",
-                                   ignore.invalid = input$invalid_decision,
-                                   ignore.NA = input$NA_decision)
+                                   ignore.invalid = FALSE,
+                                   ignore.NA = TRUE)
 
 
 
@@ -127,8 +117,8 @@ server <- function(input, output, session){
     data_mhqol <- mhqol::mhqol(dimensions = data[, 3:9],
                                metric = "total",
                                country = input$country_decision,
-                               ignore.invalid = input$invalid_decision,
-                               ignore.NA = input$NA_decision)
+                               ignore.invalid = FALSE,
+                               ignore.NA = TRUE)
 
     data_mhqol <- data_mhqol |>
       dplyr::mutate(utility = round(utility, 3))
@@ -141,8 +131,16 @@ server <- function(input, output, session){
     data <- cbind(descriptives, data_mhqol)
 
 
-
     return(data)
+
+  })
+
+  #  Metric for output calculations
+  selected_metric <- reactive({
+
+    selected_metric <- ifelse(input$output_decision == "Scores", "LSS", "utility")
+
+    return(selected_metric)
 
   })
 
@@ -192,7 +190,465 @@ server <- function(input, output, session){
     )
 
 
+
+# For the dinner plate ----------------------------------------------------
+
+    # Get summary stats
+    get_summary_stats <- function(selected_var, selected_group) {
+      data <- uploaded_data()
+      req(data, selected_var, selected_group)
+
+
+      metric_col <- selected_metric()
+
+
+      if (selected_var == "Overall" & selected_group == "None") {
+        stats <- data %>%
+          summarise(Mean = mean(.data[[metric_col]], na.rm = TRUE),
+                    SD = sd(.data[[metric_col]], na.rm = TRUE))
+      } else if (selected_group != "None" & selected_var == "Overall") {
+          stats <- data %>%
+            group_by(.data[[selected_group]]) %>%
+            summarise(
+              Mean = mean(.data[[metric_col]], na.rm = TRUE),
+              SD = sd(.data[[metric_col]], na.rm = TRUE)
+            )
+        } else if (selected_group == "None" & selected_var != "Overall") {
+          stats <- data %>%
+            summarise(
+              Mean = mean(c_across(starts_with(selected_var)), na.rm = TRUE),
+              SD = sd(c_across(starts_with(selected_var)), na.rm = TRUE)
+            )
+    } else if(selected_group != "None" & selected_var != "Overall"){
+      stats <- data %>%
+        group_by(.data[[selected_group]]) %>%
+        summarise(
+          Mean = mean(c_across(starts_with(selected_var)), na.rm = TRUE),
+          SD = sd(c_across(starts_with(selected_var)), na.rm = TRUE)
+        )
+
+        }
+
+      return(stats)
+    }
+
+    # Show modal when button is clicked
+    observeEvent(input$create_plate, {
+
+      showModal(
+        modalDialog(
+          title = "MHQOL Plate 🍽 (Summary Statistics)",
+
+          # Tabs inside the modal
+          tabsetPanel(
+
+            tabPanel("Select Dimension",
+                     h4("Choose a Dimension:"),
+                     selectInput("dimension_input", "Select a Dimension:",
+                                 choices = c("Overall", "SI", "IN", "MO", "RE", "DA", "PH", "FU"),
+                                 selected = "Overall"),
+                     h4("Split by group?"),
+                     selectInput("group_input", "Choose Grouping Variable:", choices = c("None", "Group"), selected = "None")),
+
+
+            tabPanel("Summary Statistics",
+                     h4("Averages & Standard Deviations"),
+                     DTOutput("summary_table")),
+
+            tabPanel("Histogram",
+                     h4("Distribution of a Selected Dimension or Overall"),
+                     sliderInput("bin_width", "Bin Width:", min = 0.1, max = 10, value = 0.5, step = 0.1),
+                     plotOutput("histogram_plot")),
+
+            tabPanel("Density chart",
+                     h4("Density of a Selected Dimension or Overall"),
+                     plotOutput("density_plot")),
+
+            tabPanel("Line chart",
+                     h4("Line plot of Overall"),
+                     plotOutput("line_plot")),
+
+            tabPanel("Radar chart",
+                     h4("Radar of the selected dimension or Overall"),
+                     plotOutput("radar_chart"))
+          ),
+
+          easyClose = TRUE,
+          footer = modalButton("Close")
+        )
+      )
+    })
+
+    # Output summary statistics
+    output$summary_table <- renderDT({
+
+      req(input$dimension_input, input$group_input)
+
+      stats <- get_summary_stats(input$dimension_input, input$group_input)
+
+      datatable(stats, options = list(pageLength = 10))
+    })
+
+    # Histogram
+
+
+
+    output$histogram_plot <- renderPlot({
+      req(input$dimension_input)
+      data <- uploaded_data()
+
+
+
+      metric_col <- selected_metric()
+
+
+      if(input$group_input == "None" & input$dimension_input == "Overall"){
+
+        ggplot(data, aes(x = .data[[metric_col]], y = ..count../sum(..count..))) +
+          geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
+          theme_minimal() +
+          labs(title = paste("Histogram of", input$dimension_input),
+               x = input$dimension_input,
+               y = "Percentage") +
+          scale_y_continuous(labels = scales::percent)
+      }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
+        ggplot(data, aes(x = .data[[metric_col]], y = ..count../sum(..count..))) +
+          geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
+          facet_wrap(~Group, ncol = 2) +
+          theme_minimal() +
+          labs(title = paste("Histogram of", input$dimension_input),
+               x = input$dimension_input,
+               y = "Percentage") +
+          scale_y_continuous(labels = scales::percent)
+
+
+      }else if(input$group_input == "None" & input$dimension_input != "overall"){
+        data_long <- data %>%
+          pivot_longer(
+            cols = starts_with(input$dimension_input),
+            names_to = "variable",
+            values_to = "value"
+          )
+
+      ggplot(data_long, aes(x = value, y = ..count../sum(..count..))) +
+          geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
+          theme_minimal() +
+          labs(title = paste("Histogram of", input$dimension_input),
+               x = input$dimension_input,
+               y = "Percentage") +
+          scale_y_continuous(labels = scales::percent)
+
+      }else if(input$group_input == "Group"){
+        data_long <- data %>%
+          pivot_longer(
+            cols = starts_with(input$dimension_input),
+            names_to = "variable",
+            values_to = "value"
+          )
+
+        ggplot(data_long, aes(x = value, y = ..count../sum(..count..))) +
+          geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
+          facet_wrap(~Group, ncol = 2) +
+          theme_minimal() +
+          labs(title = paste("Histogram of", input$dimension_input),
+               x = input$dimension_input,
+               y = "Percentage") +
+          scale_y_continuous(labels = scales::percent)
+      }
+    })
+
+
+    # Density Plot
+
+
+    output$density_plot <- renderPlot({
+      req(input$dimension_input)
+      data <- uploaded_data()
+
+      metric_col <- selected_metric()
+
+      facet_wrap(~Group, ncol = 2)
+
+
+      if(input$group_input == "None" & input$dimension_input == "Overall"){
+      ggplot(data, aes(x = .data[[metric_col]])) +
+        geom_density(fill = "blue", alpha = 0.5) +
+        theme_minimal() +
+        labs(title = paste("Density Plot of", input$dimension_input),
+             x = input$dimension_input, y = "Density")
+      }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
+        ggplot(data, aes(x = .data[[metric_col]])) +
+          geom_density(fill = "blue", alpha = 0.5) +
+          facet_wrap(~Group, ncol = 2) +
+          theme_minimal() +
+          labs(title = paste("Density Plot of", input$dimension_input),
+               x = input$dimension_input, y = "Density")
+      }else if(input$group_input == "None" & input$dimension_input != "Overall"){
+        data_long <- data %>%
+          pivot_longer(
+            cols = starts_with(input$dimension_input),
+            names_to = "variable",
+            values_to = "value"
+          )
+
+        ggplot(data_long, aes(x = value)) +
+          geom_density(fill = "blue", alpha = 0.5) +
+          theme_minimal() +
+          labs(title = paste("Density Plot of", input$dimension_input),
+              x = input$dimension_input, y = "Density")
+
+      }else if(input$group_input == "Group" & input$dimension_input != "Overall"){
+        data_long <- data %>%
+          pivot_longer(
+            cols = starts_with(input$dimension_input),
+            names_to = "variable",
+            values_to = "value"
+          )
+
+        ggplot(data_long, aes(x = value)) +
+          geom_density(fill = "blue", alpha = 0.5) +
+          facet_wrap(~Group, ncol = 2) +
+          theme_minimal() +
+          labs(title = paste("Density Plot of", input$dimension_input),
+              x = input$dimension_input, y = "Density")
+      }
+    })
+
+
+
+
+    # Line diagram (Show all lines)
+    output$line_plot <- renderPlot({
+      req(input$dimension_input)
+      data <- uploaded_data()
+
+      metric_col <- selected_metric()
+
+      data_long <- data %>%
+        pivot_longer(
+          cols = c(starts_with("SI"),
+                   starts_with("IN"),
+                   starts_with("MO"),
+                   starts_with("RE"),
+                   starts_with("DA"),
+                   starts_with("PH"),
+                   starts_with("FU")),
+          names_to = "variable",
+          values_to = "value")
+
+      if(input$group_input == "None" & input$dimension_input == "Overall"){
+        data_average <- data_long %>%
+          group_by(variable) %>%
+          summarize(avg_value = mean(value, na.rm = TRUE), .groups = "drop")
+
+        data_average <- data_average %>%
+          mutate(variable = factor(variable, levels = c('SI',
+                                                        "IN",
+                                                        "MO",
+                                                        "RE",
+                                                        "DA",
+                                                        "PH",
+                                                        "FU"))) %>%
+          arrange(variable)
+
+
+        data_average <- data_average %>%
+          mutate(cum_avg = cummean(avg_value))
+
+
+        ggplot(data_average, aes(x = variable, y = cum_avg, group = 1)) +
+          geom_line(size = 1) +
+          geom_point(size = 2) +
+          theme_minimal() +
+          labs(title = paste("Line Plot of Overall"))
+      }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
+        data_average <- data_long %>%
+          group_by(Group, variable) %>%
+          summarize(avg_value = mean(value, na.rm = TRUE), .groups = "drop")
+
+        data_average <- data_average %>%
+          mutate(variable = factor(variable, levels = c('SI',
+                                                        "IN",
+                                                        "MO",
+                                                        "RE",
+                                                        "DA",
+                                                        "PH",
+                                                        "FU"))) %>%
+          arrange(variable)
+
+
+        data_average <- data_average %>%
+          group_by(Group) %>%
+          mutate(cum_avg = cummean(avg_value)) %>%
+          ungroup()
+
+        ggplot(data_average, aes(x = variable, y = cum_avg, color = Group, group = Group)) +
+          geom_line(size = 1) +
+          geom_point(size = 2) +
+          theme_minimal() +
+          labs(
+            title = paste("Line Plot of", input$dimension_input),
+            x = input$dimension_input,
+            y = "Line"
+          )
+      }
+      })
+
+
+
+
+
+
+    # Radar Chart (Comparing Multiple Dimensions)
+    output$radar_chart <- renderPlot({
+      req(uploaded_data())
+
+      metric_col <- selected_metric()
+      data <- uploaded_data()
+
+
+      if(input$group_input == "None" & input$dimension_input == "Overall"){
+
+        library(fmsb)
+
+        # Calculate averages for selected columns
+        averages <- data %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), mean, na.rm = TRUE))
+
+        # Calculate maximum values for selected columns
+        max_values <- data %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), max, na.rm = TRUE))
+
+        # Calculate minimum values for selected columns (use a different variable name)
+        min_values <- data %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), min, na.rm = TRUE))
+
+        # Combine into a single data frame for the radar chart
+        radar_data <- rbind(max_values, min_values, averages)
+        rownames(radar_data) <- c("Max", "Min", "Average")
+
+        # Plot the radar chart
+        radarchart(radar_data,
+                   axistype = 1,
+                   pcol = rgb(0.2, 0.5, 0.5, 0.9),
+                   pfcol = rgb(0.2, 0.5, 0.5, 0.5),
+                   plwd = 4,
+                   cglcol = "grey", cglty = 1,
+                   axislabcol = "grey",
+                   caxislabels = seq(min(as.numeric(min_values)), max(as.numeric(max_values)), length.out = 5),
+                   cglwd = 0.8,
+                   vlcex = 0.8)
+      }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
+        # Calculate averages for GroupA
+        groupA <- data %>%
+          filter(group == "Group A") %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), mean, na.rm = TRUE))
+
+        # Calculate averages for GroupB
+        groupB <- data %>%
+          filter(group == "Group B") %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), mean, na.rm = TRUE))
+
+        # Calculate overall maximum values for selected columns
+        max_values <- data %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), max, na.rm = TRUE))
+
+        # Calculate overall minimum values for selected columns
+        min_values <- data %>%
+          select(
+            starts_with("SI"),
+            starts_with("IN"),
+            starts_with("MO"),
+            starts_with("RE"),
+            starts_with("DA"),
+            starts_with("PH"),
+            starts_with("FU")
+          ) %>%
+          summarise(across(everything(), min, na.rm = TRUE))
+
+        # Combine the rows in the order: Max, Min, GroupA, GroupB
+        radar_data <- rbind(max_values, min_values, groupA, groupB)
+
+        # Set row names for clarity (first two rows are reserved for scaling)
+        rownames(radar_data) <- c("Max", "Min", "GroupA", "GroupB")
+
+        library(fmsb)
+
+        radarchart(radar_data,
+                   axistype = 1,
+                   # Set the polygon colors for GroupA and GroupB (first two rows are not plotted)
+                   pcol = c(NA, NA, "blue", "red"),
+                   # Set semi-transparent fill colors for each group polygon
+                   pfcol = c(NA, NA, rgb(0, 0, 1, 0.4), rgb(1, 0, 0, 0.4)),
+                   plwd = c(NA, NA, 3, 3),
+                   # Grid and axis settings
+                   cglcol = "grey", cglty = 1,
+                   axislabcol = "grey",
+                   # You can customize axis labels; here we generate a sequence based on overall min and max
+                   caxislabels = seq(min(as.numeric(min_values)), max(as.numeric(max_values)), length.out = 5),
+                   cglwd = 0.8,
+                   vlcex = 0.8)
+      }
+
+})
+
 }
+
+
 
 # Run the application
 shinyApp(ui = ui, server = server)
