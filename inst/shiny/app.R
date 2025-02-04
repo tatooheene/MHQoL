@@ -50,12 +50,42 @@ ui <-navbarPage(title = "MHQoL",
     )
   ),
 
-tabPanel(title = "The reversed MHQoL Cooker 🔄")
+tabPanel(title = "The reversed MHQoL Cooker 🔄",
+         sidebarPanel(
+
+           # Centered action button at the top
+           fileInput("rev_file", "Choose a file (CSV, Excel, RDS)",
+                     accept = c(".csv", ".xlsx", ".rds")),
+
+
+           textOutput("warning_message_rev"),
+
+           h4("Example data"),
+           p("MHQoL example data scores:", a(img(src="images/icon-excel.png", height = 24, width = 24), href="example-data/example_data_scores.xlsx", target="_blank"), style="margin-bottom:0"),
+           p("MHQoL example data utilities:", a(img(src="images/icon-excel.png", height = 24, width = 24), href="example-data/example_data_utilities.xlsx", target="_blank"), style="margin-bottom:0"),
+           hr(),
+
+           radioButtons("input_decision",
+                        label = "Input",
+                        choices = c("Scores", "Utilities")),
+
+
+           selectInput("country_decision_rev",
+                       label = "Country",
+                       choices = "Netherlands",
+                       selected = "Netherlands")),
+
+         mainPanel(DTOutput("data_output_rev"),
+
+                   # Download buttons
+                   uiOutput("download_buttons_rev")
+         )
+)
+)
 
 
 
 
-  )
 
 server <- function(input, output, session){
 
@@ -126,7 +156,7 @@ server <- function(input, output, session){
     }
 
 
-    # If input$ouput_decision = "Utilities"
+    # If input$output_decision = "Utilities"
 
     data <- cbind(descriptives, data_mhqol)
 
@@ -186,6 +216,121 @@ server <- function(input, output, session){
       filename = function() { "cooked_data.xlsx" },
       content = function(file) {
         writexl::write_xlsx(uploaded_data(), file)
+      }
+    )
+
+
+
+# Second panel to recalculate scores or utilities into dimensions ---------
+
+    rev_data <- reactive({
+      req(input$rev_file)
+
+
+      file_path_rev<- input$rev_file$datapath
+
+      # Read the file based on its extension
+      data_rev <- tryCatch({
+        if (grepl("\\.csv$", input$rev_file$name)) {
+          read_csv(file_path_rev)
+        } else if (grepl("\\.xlsx$", input$rev_file$name)) {
+          readxl::read_excel(file_path_rev)
+        } else if (grepl("\\.rds$", input$rev_file$name)) {
+          readRDS(file_path_rev)
+        } else {
+          return(NULL)
+        }
+      },error = function(e) return(NULL)  # Return NULL if there's an error
+      )
+
+      data_rev <- data_rev |>
+        dplyr::select(c("ID", "Group",
+                      contains("SI"),
+                      contains("IN"),
+                      contains("MO"),
+                      contains("RE"),
+                      contains("DA"),
+                      contains("PH"),
+                      contains("FU")))
+
+      descriptives_rev <- data_rev |>
+        dplyr::select("ID", "Group")
+
+
+
+
+      # Recalculate data into scores/utilities based on the input
+
+      # If input$input_decision = Scores
+
+
+
+      if(input$input_decision == "Scores"){
+        data_mhqol_rev <- mhqol::mhqol_scores_to_states(scores = data_rev[, 3:9],
+                                       retain_old_variables = FALSE)
+
+
+
+      } else if(input$input_decision == "Utilities"){
+        data_mhqol_rev <- mhqol::mhqol_utilities_to_states(utilities = data_rev[, 3:9],
+                                                           country = input$country_decision_rev,
+                                                           retain_old_variables = FALSE)
+
+      }
+
+
+      # If input$output_decision = "Utilities"
+
+      data_rev <- cbind(descriptives_rev, data_mhqol_rev)
+
+
+      return(data_rev)
+
+    })
+
+
+
+
+    # Warning message if the file is invalid
+    output$warning_message_rev <- renderText({
+      if (is.null(rev_data())) {
+        return("⚠️ Please upload a valid dataframe (CSV, Excel, or RDS).")
+      }
+      return(NULL)  # No warning if file is valid
+    })
+
+
+
+
+    # Render the processed table
+    output$data_output_rev <- renderDT({
+      req(rev_data())
+      datatable(rev_data(), options = list(pageLength = 15))
+    })
+
+    # Conditionally show the download buttons when the table is rendered
+    output$download_buttons_rev <- renderUI({
+      req(rev_data())  # Ensure data exists before showing buttons
+
+      tagList(
+        downloadButton("download_rds", "Download as RDS"),
+        downloadButton("download_excel", "Download as Excel")
+      )
+    })
+
+    # Download handler for RDS
+    output$download_rds_rev <- downloadHandler(
+      filename = function() { "rev_cooked_data.rds" },
+      content = function(file_rev) {
+        saveRDS(rev_data(), file_rev)
+      }
+    )
+
+    # Download handler for Excel
+    output$download_excel <- downloadHandler(
+      filename = function() { "rev_cooked_data.xlsx" },
+      content = function(file_rev) {
+        writexl::write_xlsx(rev_data(), file_rev)
       }
     )
 
@@ -258,19 +403,23 @@ server <- function(input, output, session){
             tabPanel("Histogram",
                      h4("Distribution of a Selected Dimension or Overall"),
                      sliderInput("bin_width", "Bin Width:", min = 0.1, max = 10, value = 0.5, step = 0.1),
-                     plotOutput("histogram_plot")),
+                     plotOutput("histogram_plot"),
+                     downloadButton("downloadHist", "Download Histogram as PNG")),
 
             tabPanel("Density chart",
                      h4("Density of a Selected Dimension or Overall"),
-                     plotOutput("density_plot")),
+                     plotOutput("density_plot"),
+                     downloadButton("downloadDens", "Download Density plot as PNG")),
 
             tabPanel("Line chart",
                      h4("Line plot of Overall"),
-                     plotOutput("line_plot")),
+                     plotOutput("line_plot"),
+                     downloadButton("downloadLine", "Download Line plot as PNG")),
 
             tabPanel("Radar chart",
                      h4("Radar of the selected dimension or Overall"),
-                     plotOutput("radar_chart"))
+                     plotOutput("radar_chart"),
+                     downloadButton("downloadRadar", "Download Radar Chart as PNG"))
           ),
 
           easyClose = TRUE,
@@ -293,7 +442,7 @@ server <- function(input, output, session){
 
 
 
-    output$histogram_plot <- renderPlot({
+    drawHist <- function(){
       req(input$dimension_input)
       data <- uploaded_data()
 
@@ -303,16 +452,16 @@ server <- function(input, output, session){
 
 
       if(input$group_input == "None" & input$dimension_input == "Overall"){
-
-        ggplot(data, aes(x = .data[[metric_col]], y = ..count../sum(..count..))) +
+          ggplot(data, aes(x = .data[[metric_col]], y = ..count../sum(..count..))) +
           geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
           theme_minimal() +
           labs(title = paste("Histogram of", input$dimension_input),
                x = input$dimension_input,
                y = "Percentage") +
           scale_y_continuous(labels = scales::percent)
+
       }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
-        ggplot(data, aes(x = .data[[metric_col]], y = ..count../sum(..count..))) +
+          ggplot(data, aes(x = .data[[metric_col]], y = ..count../sum(..count..))) +
           geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
           facet_wrap(~Group, ncol = 2) +
           theme_minimal() +
@@ -321,8 +470,7 @@ server <- function(input, output, session){
                y = "Percentage") +
           scale_y_continuous(labels = scales::percent)
 
-
-      }else if(input$group_input == "None" & input$dimension_input != "overall"){
+        }else if(input$group_input == "None" & input$dimension_input != "overall"){
         data_long <- data %>%
           pivot_longer(
             cols = starts_with(input$dimension_input),
@@ -330,7 +478,7 @@ server <- function(input, output, session){
             values_to = "value"
           )
 
-      ggplot(data_long, aes(x = value, y = ..count../sum(..count..))) +
+        ggplot(data_long, aes(x = value, y = ..count../sum(..count..))) +
           geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
           theme_minimal() +
           labs(title = paste("Histogram of", input$dimension_input),
@@ -345,8 +493,7 @@ server <- function(input, output, session){
             names_to = "variable",
             values_to = "value"
           )
-
-        ggplot(data_long, aes(x = value, y = ..count../sum(..count..))) +
+          ggplot(data_long, aes(x = value, y = ..count../sum(..count..))) +
           geom_histogram(binwidth = input$bin_width, fill = "blue", alpha = 0.7) +
           facet_wrap(~Group, ncol = 2) +
           theme_minimal() +
@@ -354,14 +501,29 @@ server <- function(input, output, session){
                x = input$dimension_input,
                y = "Percentage") +
           scale_y_continuous(labels = scales::percent)
+        }
       }
-    })
+
+      output$histogram_plot <- renderPlot({
+        drawHist()
+      })
+
+        output$downloadHist <- downloadHandler(
+          filename = function() {
+            paste("histogram_chart_", Sys.Date(), ".png", sep = "")
+          },
+          content = function(file) {
+            png(file, width = 800, height = 800)
+            print(drawHist())
+            dev.off()
+          }
+        )
 
 
     # Density Plot
 
 
-    output$density_plot <- renderPlot({
+    drawDens <- function(){
       req(input$dimension_input)
       data <- uploaded_data()
 
@@ -412,13 +574,28 @@ server <- function(input, output, session){
           labs(title = paste("Density Plot of", input$dimension_input),
               x = input$dimension_input, y = "Density")
       }
+    }
+
+    output$density_plot <- renderPlot({
+      drawDens()
     })
+
+    output$downloadDens <- downloadHandler(
+      filename = function() {
+        paste("density_chart_", Sys.Date(), ".png", sep = "")
+      },
+      content = function(file) {
+        png(file, width = 800, height = 800)
+        print(drawDens())
+        dev.off()
+      }
+    )
 
 
 
 
     # Line diagram (Show all lines)
-    output$line_plot <- renderPlot({
+    drawLine <- function(){
       req(input$dimension_input)
       data <- uploaded_data()
 
@@ -492,7 +669,23 @@ server <- function(input, output, session){
             y = "Line"
           )
       }
-      })
+    }
+
+    output$line_plot <- renderPlot({
+      drawLine()
+    })
+
+    output$downloadLine <- downloadHandler(
+      filename = function() {
+        paste("line_chart_", Sys.Date(), ".png", sep = "")
+      },
+      content = function(file) {
+        png(file, width = 800, height = 800)
+        print(drawLine())
+        dev.off()
+      }
+    )
+
 
 
 
@@ -500,7 +693,7 @@ server <- function(input, output, session){
 
 
     # Radar Chart (Comparing Multiple Dimensions)
-    output$radar_chart <- renderPlot({
+    drawRadar <- function(){
       req(uploaded_data())
 
       metric_col <- selected_metric()
@@ -568,7 +761,7 @@ server <- function(input, output, session){
       }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
         # Calculate averages for GroupA
         groupA <- data %>%
-          filter(group == "Group A") %>%
+          filter(Group == "Group A") %>%
           select(
             starts_with("SI"),
             starts_with("IN"),
@@ -582,7 +775,7 @@ server <- function(input, output, session){
 
         # Calculate averages for GroupB
         groupB <- data %>%
-          filter(group == "Group B") %>%
+          filter(Group == "Group B") %>%
           select(
             starts_with("SI"),
             starts_with("IN"),
@@ -630,21 +823,39 @@ server <- function(input, output, session){
 
         radarchart(radar_data,
                    axistype = 1,
-                   # Set the polygon colors for GroupA and GroupB (first two rows are not plotted)
-                   pcol = c(NA, NA, "blue", "red"),
-                   # Set semi-transparent fill colors for each group polygon
-                   pfcol = c(NA, NA, rgb(0, 0, 1, 0.4), rgb(1, 0, 0, 0.4)),
-                   plwd = c(NA, NA, 3, 3),
-                   # Grid and axis settings
+                   # Provide colors only for the groups (ignoring the first two rows)
+                   pcol = c("blue", "red"),
+                   pfcol = c(rgb(0, 0, 1, 0.4), rgb(1, 0, 0, 0.4)),
+                   plwd = c(3, 3),
                    cglcol = "grey", cglty = 1,
                    axislabcol = "grey",
-                   # You can customize axis labels; here we generate a sequence based on overall min and max
                    caxislabels = seq(min(as.numeric(min_values)), max(as.numeric(max_values)), length.out = 5),
                    cglwd = 0.8,
                    vlcex = 0.8)
-      }
 
-})
+        legend("topright",
+               legend = c("GroupA", "GroupB"),
+               col = c("blue", "red"),
+               lwd = 3,
+               bty = "n")
+      }
+    }
+
+    output$radar_chart <- renderPlot({
+      drawRadar()
+    })
+
+    output$downloadRadar <- downloadHandler(
+      filename = function() {
+        paste("radar_chart_", Sys.Date(), ".png", sep = "")
+      },
+      content = function(file) {
+        png(file, width = 800, height = 800)
+        print(drawRadar())
+        dev.off()
+      }
+    )
+
 
 }
 
