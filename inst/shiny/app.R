@@ -43,7 +43,8 @@ ui <-navbarPage(title = "MHQoL",
                     choices = "Netherlands",
                     selected = "Netherlands")),
 
-    mainPanel(DTOutput("data_output"),
+    mainPanel(
+      DTOutput("data_output"),
 
     # Download buttons
     uiOutput("download_buttons")
