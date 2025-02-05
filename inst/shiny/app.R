@@ -93,7 +93,7 @@ server <- function(input, output, session){
 
   options(shiny.sanitize.errors = FALSE)
 
-  addResourcePath('example-data', "~/mhqol/inst/extdata") # Dit later aanpassen
+  addResourcePath('example-data', here::here("inst/extdata")) # Dit later aanpassen
 
 
 
@@ -374,7 +374,8 @@ server <- function(input, output, session){
 
         }
 
-      return(stats)
+      stats %>%
+        mutate(across(where(is.numeric), ~ round(.x, input$round_digi)))
     }
 
     # Show modal when button is clicked
@@ -398,6 +399,7 @@ server <- function(input, output, session){
 
             tabPanel("Summary Statistics",
                      h4("Averages & Standard Deviations"),
+                     numericInput("round_digi", "Show decimal places:", value = 2),
                      DTOutput("summary_table")),
 
             tabPanel("Histogram",
@@ -637,7 +639,9 @@ server <- function(input, output, session){
           geom_line(size = 1) +
           geom_point(size = 2) +
           theme_minimal() +
-          labs(title = paste("Line Plot of Overall"))
+          labs(title = paste("Line plot of overall"),
+               x = "Dimensions",
+               y = "Cumulative mean")
       }else if(input$group_input == "Group" & input$dimension_input == "Overall"){
         data_average <- data_long %>%
           group_by(Group, variable) %>%
@@ -664,7 +668,7 @@ server <- function(input, output, session){
           geom_point(size = 2) +
           theme_minimal() +
           labs(
-            title = paste("Line Plot of", input$dimension_input),
+            title = paste("Line plot of", input$dimension_input),
             x = input$dimension_input,
             y = "Line"
           )
