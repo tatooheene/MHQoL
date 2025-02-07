@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/Persoonlijke map/Oratie Leona/app.R="1F6FC31E"
 C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/mhqol/R/mhqol.R="2D86EDD6"
 C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/mhqol/R/mhqol_LSS.R="00CA7E1B"
@@ -15,3 +16,15 @@ C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/tatooheene2/
 C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/tatooheene2/tatooheene/README.Rmd="A10B2EC4"
 C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/tatooheene2/tatooheene/README.md="FD1DF75C"
 C:/Users/85304spe/OneDrive - Erasmus University Rotterdam/Documents/tatooheene2/tatooheene/data-raw/df_cpi.R="9CE74185"
+=======
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/DESCRIPTION="F25D5117"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol.R="F46807F0"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol_LSS.R="CA746460"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol_scores_to_states.R="0CAF88D8"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol_states_to_scores.R="1CD762F2"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol_utilities_to_states.R="041B0653"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol_utility.R="DFBC65C7"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/R/mhqol_valueset.R="B0016700"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/README.md="DC02C911"
+/Users/fthielen/Library/CloudStorage/OneDrive-ErasmusUniversityRotterdam/GitHub_on_OneDrive/mhqol/inst/shiny/app.R="542E355D"
+>>>>>>> 22dba7328f8e556a7bad3c8cc3ab32dc0c326b00
