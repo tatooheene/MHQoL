@@ -7,9 +7,9 @@
 #'
 #' @param country The country for which the utilities should be calculated. For now the only option is "Netherlands".
 #'
-#' @param ignore.invalid If TRUE, the function will ignore missing utilities and continue processing.
+#' @param ignore_invalid If TRUE, the function will ignore missing utilities and continue processing.
 #'
-#' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
+#' @param ignore_NA If TRUE, the function will ignore NA values in the input data.
 #'
 #' @param retain_old_variables If TRUE, the function will retain the old variables in the output.
 #'
@@ -20,15 +20,15 @@
 #' @examples
 #' # Example usage of the mhqol_utilities_to_scores function
 #' # Get the scores based on a numeric vector, not all utilities are present
-#' mhqol_utilities_to_scores(utilities = c(IN = -0.018, DA = -0.021, PH = -0.064, FU = -0.106), ignore.invalid = TRUE)
+#' mhqol_utilities_to_scores(utilities = c(IN = -0.018, DA = -0.021, PH = -0.064, FU = -0.106), ignore_invalid = TRUE)
 #'
 #' # Get the scores based on a dataframe
 #' mhqol_utilities_to_scores(utilities = data.frame(SI = -0.137, IN = -0.184, MO = -0.063, RE = -0.172, DA = -0.021, PH = -0.243, FU = -0.170))
 
 mhqol_utilities_to_scores <- function(utilities,
                                       country = "Netherlands",
-                                      ignore.invalid = FALSE,
-                                      ignore.NA = TRUE,
+                                      ignore_invalid = FALSE,
+                                      ignore_NA = TRUE,
                                       retain_old_variables = TRUE){
 
 
@@ -79,12 +79,12 @@ mhqol_utilities_to_scores <- function(utilities,
 
 
   if(length(missing_utilities) > 0){
-    if(ignore.invalid == FALSE)
+    if(ignore_invalid == FALSE)
       stop(paste(
         "The following required utilities are missing:",
         paste(missing_utilities, collapse = ",")
       ))
-  } else if(ignore.invalid == TRUE){
+  } else if(ignore_invalid == TRUE){
     warning(paste(
       "The following required utilities are missing and will be ignored:",
       paste(missing_utilities, collapse = ",")
@@ -97,9 +97,9 @@ mhqol_utilities_to_scores <- function(utilities,
 
 
   if(any(is.na(utilities))){
-    if(ignore.NA == FALSE){
-      stop("The data contains NA values. Please handle NAs or set ignore.NA = TRUE.")
-    } else if (ignore.NA == TRUE){
+    if(ignore_NA == FALSE){
+      stop("The data contains NA values. Please handle NAs or set ignore_NA = TRUE.")
+    } else if (ignore_NA == TRUE){
       warning("The data contains NA values. They willl be ignored in processing")
     }
   }

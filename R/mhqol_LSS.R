@@ -11,10 +11,10 @@
 #'
 #' @param metric A character value indicating whether to calculate the "total" or "average" LSS.
 #'
-#' @param ignore.invalid If TRUE, the function will ignore missing dimensions and continue processing.
+#' @param ignore_invalid If TRUE, the function will ignore missing dimensions and continue processing.
 #' If FALSE, the function will stop and throw an error.
 #'
-#' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
+#' @param ignore_NA If TRUE, the function will ignore NA values in the input data.
 #' If FALSE, the function will stop and throw an error.
 #'
 #' @return A dataframe containing the LSS based on the MHQoL manual.
@@ -24,7 +24,7 @@
 #' @examples
 #' # Example usage of the mhqol_LSS function
 #' # Get the LSS based on a character vector and calculate the total LSS, not all dimensions are present
-#' mhqol_LSS(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore.invalid = TRUE)
+#' mhqol_LSS(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore_invalid = TRUE)
 #'
 #' # Get the LSS based on a dataframe and calculate the average LSS, all dimensions are present
 #' mhqol_LSS(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "average")
@@ -32,8 +32,8 @@
 #HIER NOG TATOOHEENE VOORZETTEN!
 mhqol_LSS <- function(dimensions,
                       metric = c("average", "total"),
-                      ignore.invalid = FALSE,
-                      ignore.NA = TRUE) {
+                      ignore_invalid = FALSE,
+                      ignore_NA = TRUE) {
 
   # Ensure metric is a single valid value
   metric <- match.arg(metric)
@@ -41,8 +41,8 @@ mhqol_LSS <- function(dimensions,
   # Convert character dimensions to numeric scores
   if (all(sapply(dimensions, is.character))) {
     data <- mhqol::mhqol_states_to_scores(states = dimensions,
-                                          ignore.invalid = ignore.invalid,
-                                          ignore.NA = ignore.NA,
+                                          ignore_invalid = ignore_invalid,
+                                          ignore_NA = ignore_NA,
                                           retain_old_variables = FALSE)
   } else if (all(sapply(dimensions, is.numeric))) {
     data <- as.data.frame(dimensions)  # Ensure it's a dataframe

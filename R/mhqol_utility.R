@@ -12,10 +12,10 @@
 #'
 #' @param country The country for which the utilities should be calculated. For now the only option is "Netherlands".
 #'
-#' @param ignore.invalid If TRUE, the function will ignore missing dimensions and continue processing.
+#' @param ignore_invalid If TRUE, the function will ignore missing dimensions and continue processing.
 #' If FALSE, the function will stop and throw an error.
 #'
-#' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
+#' @param ignore_NA If TRUE, the function will ignore NA values in the input data.
 #' If FALSE, the function will stop and throw an error.
 #'
 #' @param retain_old_variables If TRUE, the function will return the original dimensions along with the new utilities.
@@ -40,17 +40,17 @@
 #' mhqol_utilities(dimensions = df)
 #'
 #' # Get the MHQoL utilities based on a DataFrame and ignore missing dimensions
-#' mhqol_utilities(dimensions = df, ignore.invalid = TRUE)
+#' mhqol_utilities(dimensions = df, ignore_invalid = TRUE)
 #'
 #' Get the MHQoL utilities based on a numeric vector and ignore missing dimensions
-#' mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1), ignore.invalid = TRUE)
+#' mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1), ignore_invalid = TRUE)
 
 
 
 mhqol_utilities <- function(dimensions,
                             country = "Netherlands",
-                            ignore.invalid = FALSE,
-                            ignore.NA = TRUE,
+                            ignore_invalid = FALSE,
+                            ignore_NA = TRUE,
                             retain_old_variables = TRUE) {
 
   # Read in utility dataset
@@ -117,12 +117,12 @@ mhqol_utilities <- function(dimensions,
 
 
   if(length(missing_dimensions) > 0){
-    if(ignore.invalid == FALSE)
+    if(ignore_invalid == FALSE)
       stop(paste(
         "The following required dimensions are missing:",
         paste(missing_dimensions, collapse = ",")
       ))
-  } else if(ignore.invalid == TRUE){
+  } else if(ignore_invalid == TRUE){
     warning(paste(
       "The following required dimensions are missing and will be ignored:",
       paste(missing_dimensions, collapse = ",")
@@ -135,9 +135,9 @@ mhqol_utilities <- function(dimensions,
 
 
   if(any(is.na(dimensions))){
-    if(ignore.NA == FALSE){
-      stop("The data contains NA values. Please handle NAs or set ignore.NA = TRUE.")
-    } else if (ignore.NA == TRUE){
+    if(ignore_NA == FALSE){
+      stop("The data contains NA values. Please handle NAs or set ignore_NA = TRUE.")
+    } else if (ignore_NA == TRUE){
       warning("The data contains NA values. They willl be ignored in processing")
     }
   }

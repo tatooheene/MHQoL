@@ -5,9 +5,9 @@
 #'
 #' @param scores A dataframe, numeric vector, or list containing the scores of the MHQoL.
 #'
-#' @param ignore.invalid If TRUE, the function will ignore missing scores and continue processing.
+#' @param ignore_invalid If TRUE, the function will ignore missing scores and continue processing.
 #'
-#' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
+#' @param ignore_NA If TRUE, the function will ignore NA values in the input data.
 #'
 #' @param retain_old_variables If TRUE, the function will retain the old variables in the output.
 #'
@@ -18,14 +18,14 @@
 #' @examples
 #' # Example usage of the mhqol_scores_to_states function
 #' # Get the states based on a numeric vector, not all scores are present
-#' mhqol_scores_to_states(scores = c(IN = 2, DA = 1, PH = 2, FU = 3), ignore.invalid = TRUE)
+#' mhqol_scores_to_states(scores = c(IN = 2, DA = 1, PH = 2, FU = 3), ignore_invalid = TRUE)
 #'
 #' # Get the states based on a dataframe
 #' mhqol_scores_to_states(scores = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3))
 
 mhqol_scores_to_states  <- function(scores,
-                                   ignore.invalid = FALSE,
-                                   ignore.NA = TRUE,
+                                   ignore_invalid = FALSE,
+                                   ignore_NA = TRUE,
                                    retain_old_variables = TRUE){
 
 
@@ -73,12 +73,12 @@ mhqol_scores_to_states  <- function(scores,
 
 
   if(length(missing_scores) > 0){
-    if(ignore.invalid == FALSE)
+    if(ignore_invalid == FALSE)
       stop(paste(
         "The following required scores are missing:",
         paste(missing_scores, collapse = ",")
       ))
-  } else if(ignore.invalid == TRUE){
+  } else if(ignore_invalid == TRUE){
     warning(paste(
       "The following required scores are missing and will be ignored:",
       paste(missing_scores, collapse = ",")
@@ -91,9 +91,9 @@ mhqol_scores_to_states  <- function(scores,
 
 
   if(any(is.na(scores))){
-    if(ignore.NA == FALSE){
-      stop("The data contains NA values. Please handle NAs or set ignore.NA = TRUE.")
-    } else if (ignore.NA == TRUE){
+    if(ignore_NA == FALSE){
+      stop("The data contains NA values. Please handle NAs or set ignore_NA = TRUE.")
+    } else if (ignore_NA == TRUE){
       warning("The data contains NA values. They willl be ignored in processing")
     }
   }

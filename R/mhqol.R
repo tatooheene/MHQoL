@@ -10,10 +10,10 @@
 #'
 #' @param metric A character value indicating whether to calculate the "total" or "average" utility.
 #'
-#' @param ignore.invalid If TRUE, the function will ignore missing dimensions and continue processing.
+#' @param ignore_invalid If TRUE, the function will ignore missing dimensions and continue processing.
 #' If FALSE, the function will stop and throw an error.
 #'
-#' @param ignore.NA If TRUE, the function will ignore NA values in the input data.
+#' @param ignore_NA If TRUE, the function will ignore NA values in the input data.
 #' If FALSE, the function will stop and throw an error.
 #'
 #'
@@ -24,7 +24,7 @@
 #' @examples
 #' # Example usage of the mhqol_utilities function
 #' # Get the utility based on a numeric vector and calculate the total utility, not all dimensions are present
-#' mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore.invalid = TRUE)
+#' mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore_invalid = TRUE)
 #'
 #' # Get the utility based on a dataframe and calculate the average utility
 #' mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "average")
@@ -40,8 +40,8 @@
 mhqol     <- function(dimensions,
                       country = "Netherlands",
                       metric = c("average", "total"),
-                      ignore.invalid = FALSE,
-                      ignore.NA = TRUE) {
+                      ignore_invalid = FALSE,
+                      ignore_NA = TRUE) {
 
 
   # Check if metric is a single value
@@ -58,8 +58,8 @@ mhqol     <- function(dimensions,
 
   data <-  mhqol::mhqol_utilities(dimensions = dimensions,
                            country = country,
-                           ignore.invalid = ignore.invalid,
-                           ignore.NA = ignore.NA,
+                           ignore_invalid = ignore_invalid,
+                           ignore_NA = ignore_NA,
                            retain_old_variables = FALSE)
 
 

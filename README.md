@@ -1,15 +1,15 @@
 # MHQoL: Mental Health Quality of Life Toolkit
 
-This toolkit is designed to facilitate the assessment, analysis and visualization of Mental Health Quality of LIfe (MHQoL) data.
+This R-based toolkit is designed to facilitate the assessment, analysis and visualisation of Mental Health Quality of Life (MHQoL) data.
 
-It provides tools to compute standardized scores, use valueset and generate insightful visualizations, enabling researchers, clinicians and policymakers to better understand and improve mental health outcomes
+It provides several functions to compute standardised scores, use valuesets, and generate insightful visualisations, enabling researchers, clinicians and policymakers to better understand and improve mental health outcomes.
 
 # Installation
 You can install the development version of mhqol from GitHub with:
 
 ```{r}
 install.packages("remotes")
-remotes::install_github("tatooheene/mqhol")
+remotes::install_github("tatooheene/mhqol")
 ```
 
 # About the data
