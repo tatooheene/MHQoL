@@ -4,6 +4,8 @@ library(DT)
 library(writexl)
 library(mhqol)
 library(fmsb)
+library(here)
+library(shinyalert)
 
 ################################################################
 #                       USER INTERFACE                         #
@@ -94,7 +96,7 @@ server <- function(input, output, session){
 
   options(shiny.sanitize.errors = FALSE)
 
-  addResourcePath('example-data', here::here("inst/extdata")) # Dit later aanpassen
+  addResourcePath('example-data', here::here("inst/extdata"))
 
 
 
@@ -123,13 +125,50 @@ server <- function(input, output, session){
       },error = function(e) return(NULL)  # Return NULL if there's an error
     )
 
-    data <- data |>
-      dplyr::select("ID", "Group", "SI", "IN", "MO", "RE","DA","PH", "FU")
 
-    descriptives <- data |>
-      dplyr::select("ID", "Group")
+    # Define required columns (ID, Group) and dimension columns dynamically
+    descriptive_columns <- c("ID", "Group")
+    dimension_columns <- names(data)[names(data) %in% c("SI", "IN", "MO", "RE", "DA", "PH", "FU")]
 
 
+    # Check for missing descriptive columns
+    missing_columns <- setdiff(descriptive_columns, colnames(data))
+    if (length(missing_columns) > 0) {
+      shinyalert("Warning!", paste("Missing required columns:", paste(missing_columns, collapse = ", ")), type = "warning")
+    }
+
+    # Check for missing expeceed dimension columns
+    if (length(dimension_columns) < 7) {
+      shinyalert("Warning!", "Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing!", type = "warning")
+    }
+
+    # Keep only the required and available dimension columns
+    data <- data %>%
+      dplyr::select(all_of(c(descriptive_columns, dimension_columns)))
+
+    dimensions <- data %>%
+      dplyr::select(all_of(c(dimension_columns)))
+
+    descriptives <- data %>%
+      dplyr::select(all_of(descriptive_columns))
+
+    # Check for missing values (NAs)
+    if (any(is.na(data))) {
+      shinyalert("Warning!", "Your dataset contains missing values (NAs).", type = "warning")
+    }
+
+    # Check if scores are within range [0, 3]
+    if(all(sapply(dimensions, is.numeric))){
+    if (length(dimension_columns) > 0) {
+      invalid_scores <- data %>%
+        select(all_of(dimension_columns)) %>%
+        filter(if_any(everything(), ~ . < 0 | . > 3))
+
+      if (nrow(invalid_scores) > 0) {
+        shinyalert("Error!", "Some scores are outside the valid range (0 to 3).", type = "error")
+      }
+    }
+    }
 
 
     # Recalculate data into scores/utilities based on the input
@@ -137,7 +176,7 @@ server <- function(input, output, session){
     # If input$output_decision = Scores
 
     if(input$output_decision == "Scores"){
-    data_mhqol <- mhqol::mhqol_LSS(dimensions = data[, 3:9],
+    data_mhqol <- mhqol::mhqol_LSS(dimensions = data[, dimension_columns],
                                    metric = "total",
                                    ignore.invalid = FALSE,
                                    ignore.NA = TRUE)
@@ -145,7 +184,7 @@ server <- function(input, output, session){
 
 
     } else if(input$output_decision == "Utilities"){
-    data_mhqol <- mhqol::mhqol(dimensions = data[, 3:9],
+    data_mhqol <- mhqol::mhqol(dimensions = data[, dimension_columns],
                                metric = "total",
                                country = input$country_decision,
                                ignore.invalid = FALSE,
