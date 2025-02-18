@@ -8,8 +8,8 @@ mhqol(
   dimensions,
   country = "Netherlands",
   metric = c("average", "total"),
-  ignore.invalid = FALSE,
-  ignore.NA = TRUE
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE
 )
 }
 \arguments{
@@ -19,23 +19,23 @@ MO (MOod), RE (RElationships), DA (Daily Activities), PH (Physical Health), FU (
 
 \item{metric}{A character value indicating whether to calculate the "total" or "average" utility.}
 
-\item{ignore.invalid}{If TRUE, the function will ignore missing dimensions and continue processing.
+\item{ignore_invalid}{If TRUE, the function will ignore missing dimensions and continue processing.
 If FALSE, the function will stop and throw an error.}
 
-\item{ignore.NA}{If TRUE, the function will ignore NA values in the input data.
+\item{ignore_NA}{If TRUE, the function will ignore NA values in the input data.
 If FALSE, the function will stop and throw an error.}
 }
 \value{
 A dataframe containing the utilities based on the MHQoL valuesets
 }
 \description{
-`r lifecycle::badge("experimental")`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 This function calculates the utility of the MHQoL based on the scores of the different dimensions.
 }
 \examples{
 # Example usage of the mhqol_utilities function
 # Get the utility based on a numeric vector and calculate the total utility, not all dimensions are present
-mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore.invalid = TRUE)
+mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore_invalid = TRUE)
 
 # Get the utility based on a dataframe and calculate the average utility
 mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "average")

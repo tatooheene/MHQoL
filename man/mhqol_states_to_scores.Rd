@@ -6,8 +6,8 @@
 \usage{
 mhqol_states_to_scores(
   states,
-  ignore.invalid = FALSE,
-  ignore.NA = TRUE,
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE,
   retain_old_variables = TRUE
 )
 }
@@ -16,10 +16,10 @@ mhqol_states_to_scores(
 Must contain the following states: SI (Self-Image), IN (INdependence),
 MO (MOod), RE (RElationships), DA (Daily Activities), PH (Physical Health), FU (FUture).}
 
-\item{ignore.invalid}{If TRUE, the function will ignore missing states and continue processing.
+\item{ignore_invalid}{If TRUE, the function will ignore missing states and continue processing.
 If FALSE, the function will stop and throw an error.}
 
-\item{ignore.NA}{If TRUE, the function will ignore NA values in the input data.
+\item{ignore_NA}{If TRUE, the function will ignore NA values in the input data.
 If FALSE, the function will stop and throw an error.}
 
 \item{retain_old_variables}{If TRUE, the function will return the original states along with the new scores.
@@ -29,7 +29,7 @@ If FALSE, the function will only return the new scores.}
 A dataframe containing the new scores based on the MHQoL manual.
 }
 \description{
-`r lifecycle::badge("experimental")`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 This function provides the scores of the MHQoL based on textual input as described in the manual of the MHQoL.
 }
 \examples{
@@ -47,7 +47,7 @@ FU = "I am very optimistic about my future"), retain_old_variables = FALSE))
 mhqol_scores(states = df)
 
 # Get the MHQoL scores based on a DataFrame and ignore missing states
-mhqol_scores(states = df, ignore.invalid = TRUE)
+mhqol_scores(states = df, ignore_invalid = TRUE)
 }
 \keyword{MHQoL,}
 \keyword{Scores,}

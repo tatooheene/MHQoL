@@ -6,17 +6,17 @@
 \usage{
 mhqol_scores_to_states(
   scores,
-  ignore.invalid = FALSE,
-  ignore.NA = TRUE,
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE,
   retain_old_variables = TRUE
 )
 }
 \arguments{
 \item{scores}{A dataframe, numeric vector, or list containing the scores of the MHQoL.}
 
-\item{ignore.invalid}{If TRUE, the function will ignore missing scores and continue processing.}
+\item{ignore_invalid}{If TRUE, the function will ignore missing scores and continue processing.}
 
-\item{ignore.NA}{If TRUE, the function will ignore NA values in the input data.}
+\item{ignore_NA}{If TRUE, the function will ignore NA values in the input data.}
 
 \item{retain_old_variables}{If TRUE, the function will retain the old variables in the output.}
 }
@@ -29,7 +29,7 @@ This function provides the states of the MHQoL based on the scores provided (as 
 \examples{
 # Example usage of the mhqol_scores_to_states function
 # Get the states based on a numeric vector, not all scores are present
-mhqol_scores_to_states(scores = c(IN = 2, DA = 1, PH = 2, FU = 3), ignore.invalid = TRUE)
+mhqol_scores_to_states(scores = c(IN = 2, DA = 1, PH = 2, FU = 3), ignore_invalid = TRUE)
 
 # Get the states based on a dataframe
 mhqol_scores_to_states(scores = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3))

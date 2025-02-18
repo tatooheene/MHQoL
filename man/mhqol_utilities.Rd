@@ -7,8 +7,8 @@
 mhqol_utilities(
   dimensions,
   country = "Netherlands",
-  ignore.invalid = FALSE,
-  ignore.NA = TRUE,
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE,
   retain_old_variables = TRUE
 )
 }
@@ -20,10 +20,10 @@ MO (MOod), RE (RElationships), DA (Daily Activities), PH (Physical Health), FU (
 
 \item{country}{The country for which the utilities should be calculated. For now the only option is "Netherlands".}
 
-\item{ignore.invalid}{If TRUE, the function will ignore missing dimensions and continue processing.
+\item{ignore_invalid}{If TRUE, the function will ignore missing dimensions and continue processing.
 If FALSE, the function will stop and throw an error.}
 
-\item{ignore.NA}{If TRUE, the function will ignore NA values in the input data.
+\item{ignore_NA}{If TRUE, the function will ignore NA values in the input data.
 If FALSE, the function will stop and throw an error.}
 
 \item{retain_old_variables}{If TRUE, the function will return the original dimensions along with the new utilities.
@@ -33,7 +33,7 @@ If FALSE, the function will only return the new utilities.}
 A dataframe containing the new utilities based on the MHQoL manual.
 }
 \description{
-`r lifecycle::badge("experimental")`
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}
 This function provides the utilities of the MHQoL based on
 textual, as described in the manual, or numeric input of the MHQoL.
 }
@@ -52,10 +52,10 @@ FU = "I am very optimistic about my future"), retain_old_variables = FALSE))
 mhqol_utilities(dimensions = df)
 
 # Get the MHQoL utilities based on a DataFrame and ignore missing dimensions
-mhqol_utilities(dimensions = df, ignore.invalid = TRUE)
+mhqol_utilities(dimensions = df, ignore_invalid = TRUE)
 
 Get the MHQoL utilities based on a numeric vector and ignore missing dimensions
-mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1), ignore.invalid = TRUE)
+mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1), ignore_invalid = TRUE)
 }
 \keyword{Dimensions}
 \keyword{MHQoL,}
