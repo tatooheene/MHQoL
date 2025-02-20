@@ -8,7 +8,7 @@ mhqol_utilities_to_states(
   utilities,
   country = "Netherlands",
   ignore_invalid = FALSE,
-  ignore_NA = TRUE,
+  ignore_NA = FALSE,
   retain_old_variables = TRUE
 )
 }

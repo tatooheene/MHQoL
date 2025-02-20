@@ -7,7 +7,7 @@
 mhqol_scores_to_states(
   scores,
   ignore_invalid = FALSE,
-  ignore_NA = TRUE,
+  ignore_NA = FALSE,
   retain_old_variables = TRUE
 )
 }

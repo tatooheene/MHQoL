@@ -17,7 +17,7 @@
 
 mhqol_valueset <- function(country = "Netherlands"){
 
-# Read in the data frame  # DIT AANPASSEN
+# Read in the data frame
 df_utilities_countries <- mhqol::df_utilities_countries
 
 # Check if the country is a single value

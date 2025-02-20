@@ -25,7 +25,7 @@
 
 mhqol_scores_to_states  <- function(scores,
                                    ignore_invalid = FALSE,
-                                   ignore_NA = TRUE,
+                                   ignore_NA = FALSE,
                                    retain_old_variables = TRUE){
 
 
@@ -73,7 +73,7 @@ mhqol_scores_to_states  <- function(scores,
 
 
   if(length(missing_scores) > 0){
-    if(ignore_invalid == FALSE)
+    if(ignore_invalid == FALSE){
       stop(paste(
         "The following required scores are missing:",
         paste(missing_scores, collapse = ",")
@@ -84,11 +84,12 @@ mhqol_scores_to_states  <- function(scores,
       paste(missing_scores, collapse = ",")
     ))
 
-    # Remove missing scores from processing
-    scores <-  setdiff(required_scores, missing_scores)
+
+  }
   }
 
-
+  # Remove missing scores from processing
+scores <- scores[, setdiff(colnames(scores), missing_scores), drop = FALSE]
 
   if(any(is.na(scores))){
     if(ignore_NA == FALSE){
@@ -103,6 +104,7 @@ mhqol_scores_to_states  <- function(scores,
     new_scores <- scores |>
       dplyr::mutate(
         SI_s = if("SI" %in% colnames(scores)){
+          if(any(!SI %in% 0:3 & !is.na(SI))) stop("Error: SI contains values outside [0,3]")
           dplyr::case_when(SI == 3 ~ "I think very positively about myself", # SELF-IMAGE
                            SI == 2 ~ "I think positively about myself",
                            SI == 1 ~ "I think negatively about myself",
@@ -112,6 +114,7 @@ mhqol_scores_to_states  <- function(scores,
           NA_character_
         },
         IN_s = if("IN" %in% colnames(scores)){
+          if(any(!IN %in% 0:3 & !is.na(IN))) stop("Error: IN contains values outside [0,3]")
           dplyr::case_when(IN == 3 ~ "I am very satisfied with my level of independence", # INDEPENDENCE
                            IN == 2 ~ "I am satisfied with my level of independence",
                            IN == 1 ~ "I am dissatisfied with my level of independence",
@@ -121,7 +124,7 @@ mhqol_scores_to_states  <- function(scores,
           NA_character_
         },
         MO_s = if("MO" %in% colnames(scores)){
-
+          if(any(!MO %in% 0:3 & !is.na(MO))) stop("Error: MO contains values outside [0,3]")
           dplyr::case_when(MO == 3 ~ "I do not feel anxious, gloomy, or depressed",    # MOOD
                            MO == 2 ~ "I feel a little anxious, gloomy, or depressed",
                            MO == 1 ~ "I feel anxious, gloomy, or depressed",
@@ -131,6 +134,7 @@ mhqol_scores_to_states  <- function(scores,
           NA_character_
         },
         RE_s = if("RE" %in% colnames(scores)){
+          if(any(!RE %in% 0:3 & !is.na(RE))) stop("Error: RE contains values outside [0,3]")
           dplyr::case_when(RE == 3 ~ "I am very satisfied with my relationships",     # RELATIONSHIPS
                            RE == 2 ~ "I am satisfied with my relationships",
                            RE == 1 ~ "I am dissatisfied with my relationships",
@@ -140,6 +144,7 @@ mhqol_scores_to_states  <- function(scores,
           NA_character_
         },
         DA_s = if("DA" %in% colnames(scores)){
+          if(any(!DA %in% 0:3 & !is.na(DA))) stop("Error: DA contains values outside [0,3]")
           dplyr::case_when(DA == 3 ~ "I am very satisfied with my daily activities",  # DAILY ACTIVITIES
                            DA == 2 ~ "I am satisfied with my daily activities",
                            DA == 1 ~ "I am dissatisfied with my daily activities",
@@ -149,6 +154,7 @@ mhqol_scores_to_states  <- function(scores,
           NA_character_
         },
         PH_s = if("PH" %in% colnames(scores)){
+          if(any(!PH %in% 0:3 & is.na (PH))) stop("Error: PH contains values outside [0,3]")
           dplyr::case_when(PH == 3 ~ "I have no physical health problems",  # PHYSICAL HEALTH
                            PH == 2 ~ "I have some physical health problems",
                            PH == 1 ~ "I have many physical health problems" ,
@@ -158,6 +164,7 @@ mhqol_scores_to_states  <- function(scores,
           NA_character_
         },
         FU_s = if("FU" %in% colnames(scores)){
+          if(any(!FU %in% 0:3, na.rm = TRUE)) stop("Error: FU contains values outside [0,3]")
           dplyr::case_when(FU == 3 ~ "I am very optimistic about my future", # FUTURE
                            FU == 2 ~ "I am optimistic about my future",
                            FU == 1 ~ "I am gloomy about my future",
@@ -168,12 +175,18 @@ mhqol_scores_to_states  <- function(scores,
         }
       )
 
-    return(new_scores)
-
   } else{
     stop("All scores must be numeric")
   }
 
+if(retain_old_variables == FALSE){
+  new_scores <- new_scores |>
+    dplyr::select(dplyr::ends_with("_s"))
+
+  return(new_scores)
+}else if(retain_old_variables == TRUE){
+  return(new_scores)
+}
 
 
 }

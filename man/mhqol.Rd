@@ -9,7 +9,7 @@ mhqol(
   country = "Netherlands",
   metric = c("average", "total"),
   ignore_invalid = FALSE,
-  ignore_NA = TRUE
+  ignore_NA = FALSE
 )
 }
 \arguments{

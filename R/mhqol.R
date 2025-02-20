@@ -30,18 +30,11 @@
 #' mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "average")
 
 
-
-
-
-
-
-
-#HIER NOG TATOOHEENE VOORZETTEN!
 mhqol     <- function(dimensions,
                       country = "Netherlands",
                       metric = c("average", "total"),
                       ignore_invalid = FALSE,
-                      ignore_NA = TRUE) {
+                      ignore_NA = FALSE) {
 
 
   # Check if metric is a single value

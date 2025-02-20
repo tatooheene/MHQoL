@@ -117,7 +117,7 @@ mhqol_utilities <- function(dimensions,
 
 
   if(length(missing_dimensions) > 0){
-    if(ignore_invalid == FALSE)
+    if(ignore_invalid == FALSE){
       stop(paste(
         "The following required dimensions are missing:",
         paste(missing_dimensions, collapse = ",")
@@ -128,9 +128,12 @@ mhqol_utilities <- function(dimensions,
       paste(missing_dimensions, collapse = ",")
     ))
 
-    # Remove missing dimensions from processing
-    dimensions <-  setdiff(required_dimensions, missing_dimensions)
+
   }
+}
+
+# Remove missing utilities from processing
+dimensions <- dimensions[, setdiff(colnames(dimensions), missing_dimensions), drop = FALSE]
 
 
 
@@ -146,6 +149,7 @@ mhqol_utilities <- function(dimensions,
     new_dimensions <- dimensions |>
       dplyr::mutate(
         SI_u = if("SI" %in% colnames(dimensions)){
+          if(any(!SI %in% 0:3 & !is.na(SI))) stop("Error: SI contains values outside [0,3]")
         dplyr::case_when(SI == 3 ~  df_utilities_countries[df_utilities_countries$dimensions =="SI_3", country], # SELF-IMAGE
                                             SI == 2 ~ df_utilities_countries[df_utilities_countries$dimensions =="SI_2", country],
                                             SI == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="SI_1", country],
@@ -155,6 +159,7 @@ mhqol_utilities <- function(dimensions,
           NA_real_
         },
         IN_u = if("IN" %in% colnames(dimensions)){
+          if(any(!IN %in% 0:3 & !is.na(IN))) stop("Error: IN contains values outside [0,3]")
                     dplyr::case_when(IN == 3 ~ df_utilities_countries[df_utilities_countries$dimensions =="IN_3", country], # INDEPENDENCE
                                             IN == 2  ~ df_utilities_countries[df_utilities_countries$dimensions =="IN_2", country],
                                             IN == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="IN_1", country],
@@ -164,6 +169,7 @@ mhqol_utilities <- function(dimensions,
           NA_real_
         },
         MO_u = if("MO" %in% colnames(dimensions)){
+          if(any(!MO %in% 0:3 & !is.na(MO))) stop("Error: MO contains values outside [0,3]")
                     dplyr::case_when(MO == 3 ~ df_utilities_countries[df_utilities_countries$dimensions =="MO_3", country],    # MOOD
                                             MO == 2 ~ df_utilities_countries[df_utilities_countries$dimensions =="MO_2", country],
                                             MO == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="MO_1", country],
@@ -173,6 +179,7 @@ mhqol_utilities <- function(dimensions,
           NA_real_
         },
         RE_u = if("RE" %in% colnames(dimensions)){
+          if(any(!RE %in% 0:3 & !is.na(RE))) stop("Error: RE contains values outside [0,3]")
                     RE_u = dplyr::case_when(RE == 3 ~ df_utilities_countries[df_utilities_countries$dimensions =="RE_3", country],     # RELATIONSHIPS
                                             RE == 2 ~ df_utilities_countries[df_utilities_countries$dimensions =="RE_2", country],
                                             RE == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="RE_1", country],
@@ -182,6 +189,7 @@ mhqol_utilities <- function(dimensions,
           NA_real_
         },
         DA_u = if("DA" %in% colnames(dimensions)){
+          if(any(!DA %in% 0:3 & !is.na(DA))) stop("Error: DA contains values outside [0,3]")
                     DA_u = dplyr::case_when(DA == 3 ~ df_utilities_countries[df_utilities_countries$dimensions =="DA_3", country],  # DAILY ACTIVITIES
                                             DA == 2 ~ df_utilities_countries[df_utilities_countries$dimensions =="DA_2", country],
                                             DA == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="DA_1", country],
@@ -191,6 +199,7 @@ mhqol_utilities <- function(dimensions,
           NA_real_
         },
         PH_u = if("PH" %in% colnames(dimensions)){
+          if(any(!PH %in% 0:3 & !is.na(PH))) stop("Error: PH contains values outside [0,3]")
                     PH_u = dplyr::case_when(PH == 3 ~ df_utilities_countries[df_utilities_countries$dimensions =="PH_3", country],  # PHYSICAL HEALTH
                                             PH == 2 ~ df_utilities_countries[df_utilities_countries$dimensions =="PH_2", country],
                                             PH == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="PH_1", country],
@@ -200,6 +209,7 @@ mhqol_utilities <- function(dimensions,
           NA_real_
         },
         FU_u = if("FU" %in% colnames(dimensions)){
+          if(any(!FU %in% 0:3 & !is.na(FU))) stop("Error: FU contains values outside [0,3]")
                     FU_u = dplyr::case_when(FU == 3 ~ df_utilities_countries[df_utilities_countries$dimensions =="FU_3", country], # FUTURE
                                             FU == 2 ~ df_utilities_countries[df_utilities_countries$dimensions =="FU_2", country],
                                             FU == 1 ~ df_utilities_countries[df_utilities_countries$dimensions =="FU_1", country],
@@ -214,6 +224,60 @@ mhqol_utilities <- function(dimensions,
 
 
   }else if(all(sapply(dimensions, is.character))){
+    # Define valid response mappings
+    valid_dimensions <- list(
+      SI = c("I think very positively about myself",
+             "I think positively about myself",
+             "I think negatively about myself",
+             "I think very negatively about myself"),
+
+      IN = c("I am very satisfied with my level of independence",
+             "I am satisfied with my level of independence",
+             "I am dissatisfied with my level of independence",
+             "I am very dissatisfied with my level of independence"),
+
+      MO = c("I do not feel anxious, gloomy, or depressed",
+             "I feel a little anxious, gloomy, or depressed",
+             "I feel anxious, gloomy, or depressed",
+             "I feel very anxious, gloomy, or depressed"),
+
+      RE = c("I am very satisfied with my relationships",
+             "I am satisfied with my relationships",
+             "I am dissatisfied with my relationships",
+             "I am very dissatisfied with my relationships"),
+
+      DA = c("I am very satisfied with my daily activities",
+             "I am satisfied with my daily activities",
+             "I am dissatisfied with my daily activities",
+             "I am very dissatisfied with my daily activities"),
+
+      PH = c("I have no physical health problems",
+             "I have some physical health problems",
+             "I have many physical health problems",
+             "I have a great many physical health problems"),
+
+      FU = c("I am very optimistic about my future",
+             "I am optimistic about my future",
+             "I am gloomy about my future",
+             "I am very gloomy about my future")
+    )
+
+    # Function to validate state responses
+    validate_dimensions <- function(df, valid_dimensions) {
+      for (col in names(valid_dimensions)) {
+        if (col %in% colnames(df)) {
+          invalid_values <- unique(df[[col]][!df[[col]] %in% valid_dimensions[[col]] & !is.na(df[[col]])])
+          if (length(invalid_values) > 0) {
+            stop(paste("Error: Column", col, "contains unexpected values:", paste(invalid_values, collapse = ", ")))
+          }
+        }
+      }
+    }
+
+    # Run validation first
+    validate_dimensions(dimensions, valid_dimensions)
+
+
     new_dimensions <- dimensions |>
       dplyr::mutate(
         SI_u = if("SI" %in% colnames(dimensions)){
@@ -238,7 +302,7 @@ mhqol_utilities <- function(dimensions,
                     dplyr::case_when(MO == "I do not feel anxious, gloomy, or depressed" ~ df_utilities_countries[df_utilities_countries$dimensions == "MO_3", country],    # MOOD
                                             MO == "I feel a little anxious, gloomy, or depressed" ~ df_utilities_countries[df_utilities_countries$dimensions == "MO_2", country],
                                             MO == "I feel anxious, gloomy, or depressed" ~ df_utilities_countries[df_utilities_countries$dimensions == "MO_1", country],
-                                            MO == "I feel very anxious, gloomy, or dperessed" ~ df_utilities_countries[df_utilities_countries$dimensions == "MO_0", country],
+                                            MO == "I feel very anxious, gloomy, or depressed" ~ df_utilities_countries[df_utilities_countries$dimensions == "MO_0", country],
                                      TRUE~NA_real_)
         }else{
           NA_real_
@@ -292,3 +356,4 @@ mhqol_utilities <- function(dimensions,
     return(new_dimensions)
   }
 }
+

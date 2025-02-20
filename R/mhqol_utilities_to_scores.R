@@ -68,6 +68,12 @@ mhqol_utilities_to_scores <- function(utilities,
 
   utilities <- convert_to_df(utilities)
 
+  # Include an warning that in future the utility 0 in the Netherlands can be both I am optimistic about my future
+  if(country == "Netherlands"){
+    warning("In the Netherlands, the utility 0 in the Future dimension can be both score 3 and 2")
+    flush.console()
+  }
+
   # Required utilities
   required_utilities <- c("SI", "IN", "MO", "RE", "DA", "PH", "FU")
 
@@ -79,7 +85,7 @@ mhqol_utilities_to_scores <- function(utilities,
 
 
   if(length(missing_utilities) > 0){
-    if(ignore_invalid == FALSE)
+    if(ignore_invalid == FALSE){
       stop(paste(
         "The following required utilities are missing:",
         paste(missing_utilities, collapse = ",")
@@ -89,10 +95,11 @@ mhqol_utilities_to_scores <- function(utilities,
       "The following required utilities are missing and will be ignored:",
       paste(missing_utilities, collapse = ",")
     ))
-
-    # Remove missing utilities from processing
-    utilities <-  setdiff(required_utilities, missing_utilities)
+}
   }
+
+  # Remove missing utilities from processing
+  utilities <- utilities[, setdiff(colnames(utilities), missing_utilities), drop = FALSE]
 
 
 
@@ -106,6 +113,61 @@ mhqol_utilities_to_scores <- function(utilities,
 
 
   if(all(sapply(utilities, is.numeric))){
+    ## Extract valid values from df_utilities_countries
+    valid_utilities <- list(
+      SI = c(df_utilities_countries[df_utilities_countries$dimensions == "SI_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "SI_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "SI_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "SI_0", country]),
+      IN = c(df_utilities_countries[df_utilities_countries$dimensions == "IN_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "IN_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "IN_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "IN_0", country]),
+      MO = c(df_utilities_countries[df_utilities_countries$dimensions == "MO_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "MO_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "MO_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "MO_0", country]),
+      RE = c(df_utilities_countries[df_utilities_countries$dimensions == "RE_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "RE_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "RE_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "RE_0", country]),
+      DA = c(df_utilities_countries[df_utilities_countries$dimensions == "DA_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "DA_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "DA_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "DA_0", country]),
+      PH = c(df_utilities_countries[df_utilities_countries$dimensions == "PH_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "PH_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "PH_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "PH_0", country]),
+      FU = c(df_utilities_countries[df_utilities_countries$dimensions == "FU_3", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "FU_2", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "FU_1", country],
+             df_utilities_countries[df_utilities_countries$dimensions == "FU_0", country])
+
+    )
+
+
+    # Function to validate utilities before transformation
+    validate_utilities <- function(df, valid_utilities) {
+      for (col in names(valid_utilities)) {  # Loop only over expected columns
+        if (col %in% colnames(df)) {
+          # Check if values are within valid ranges (using near() for numerical stability)
+          invalid_values <- df[[col]][
+            sapply(df[[col]], function(x) !any(dplyr::near(x, valid_utilities[[col]])) & !is.na(x))
+          ]
+
+          # Stop if invalid values are found
+          if (length(invalid_values) > 0) {
+            stop(paste("Error: Column", col, "contains unexpected values:", paste(invalid_values, collapse = ", ")))
+          }
+        }
+      }
+    }
+
+
+    validate_utilities(utilities, valid_utilities)
+
+
     new_utilities <- utilities |>
       dplyr::mutate(
         SI_s = if("SI" %in% colnames(utilities)){
@@ -174,12 +236,17 @@ mhqol_utilities_to_scores <- function(utilities,
         }
       )
 
-    return(new_utilities)
-
   } else{
     stop("All utilities must be numeric")
   }
+  if(retain_old_variables == FALSE){
+    new_utilities <- new_utilities |>
+      dplyr::select(dplyr::ends_with("_s"))
 
+    return(new_utilities)
+  }else if(retain_old_variables == TRUE){
+    return(new_utilities)
+  }
 
 
 }

@@ -41,7 +41,7 @@
 
 mhqol_states_to_scores <- function(states,
                          ignore_invalid = FALSE,
-                         ignore_NA = TRUE,
+                         ignore_NA = FALSE,
                          retain_old_variables = TRUE) {
 
   # Convert the different input types into a dataframe
@@ -100,7 +100,7 @@ missing_states <- setdiff(required_states, colnames(states))
 
 
 if(length(missing_states) > 0){
-  if(ignore_invalid == FALSE)
+  if(ignore_invalid == FALSE){
   stop(paste(
     "The following required states are missing:",
     paste(missing_states, collapse = ",")
@@ -110,10 +110,12 @@ if(length(missing_states) > 0){
     "The following required states are missing and will be ignored:",
     paste(missing_states, collapse = ",")
   ))
-
-  # Remove missing states from processing
-  states <-  setdiff(required_states, missing_states)
 }
+}
+
+  # Keep only valid columns in the data frame (instead of overwriting 'states' with a character vector)
+  states <- states[, setdiff(colnames(states), missing_states), drop = FALSE]
+
 
 
 
@@ -196,6 +198,61 @@ if(all(sapply(states, is.numeric))){
 
 
 }else if(all(sapply(states, is.character))){
+
+  # Define valid response mappings
+  valid_states <- list(
+    SI = c("I think very positively about myself",
+           "I think positively about myself",
+           "I think negatively about myself",
+           "I think very negatively about myself"),
+
+    IN = c("I am very satisfied with my level of independence",
+           "I am satisfied with my level of independence",
+           "I am dissatisfied with my level of independence",
+           "I am very dissatisfied with my level of independence"),
+
+    MO = c("I do not feel anxious, gloomy, or depressed",
+           "I feel a little anxious, gloomy, or depressed",
+           "I feel anxious, gloomy, or depressed",
+           "I feel very anxious, gloomy, or depressed"),
+
+    RE = c("I am very satisfied with my relationships",
+           "I am satisfied with my relationships",
+           "I am dissatisfied with my relationships",
+           "I am very dissatisfied with my relationships"),
+
+    DA = c("I am very satisfied with my daily activities",
+           "I am satisfied with my daily activities",
+           "I am dissatisfied with my daily activities",
+           "I am very dissatisfied with my daily activities"),
+
+    PH = c("I have no physical health problems",
+           "I have some physical health problems",
+           "I have many physical health problems",
+           "I have a great many physical health problems"),
+
+    FU = c("I am very optimistic about my future",
+           "I am optimistic about my future",
+           "I am gloomy about my future",
+           "I am very gloomy about my future")
+  )
+
+  # Function to validate state responses
+  validate_states <- function(df, valid_states) {
+    for (col in names(valid_states)) {
+      if (col %in% colnames(df)) {
+        invalid_values <- unique(df[[col]][!df[[col]] %in% valid_states[[col]] & !is.na(df[[col]])])
+        if (length(invalid_values) > 0) {
+          stop(paste("Error: Column", col, "contains unexpected values:", paste(invalid_values, collapse = ", ")))
+        }
+      }
+    }
+  }
+
+  # Run validation first
+  validate_states(states, valid_states)
+
+
 new_states <- states |>
       dplyr::mutate(
         SI_s = if("SI" %in% colnames(states)){
