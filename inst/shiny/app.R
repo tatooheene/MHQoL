@@ -152,10 +152,10 @@ server <- function(input, output, session){
 
     # Check for missing expeceed dimension columns
     if (length(dimension_columns) < 7 & input$invalid_decision == "Yes") {
-      shinyalert("Warning!", "Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing!", type = "warning")
+      shinyalert("Warning!", "Some expected dimensions are missing!", type = "warning")
     }else if(length(dimension_columns) <7 & input$invalid_decision == "No"){
-      shinyalert("Error!", "Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing!", type = "error")
-      stop("🚨 Error: Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing! Execution stopped.")
+      shinyalert("Error!", "Some expected dimensions are missing!", type = "error")
+      stop("🚨 Error: Some expected dimensions are missing! Execution stopped.")
     }
 
     # Keep only the required and available dimension columns
@@ -176,18 +176,20 @@ server <- function(input, output, session){
       stop("🚨 Error: Your dataset contains missing values (NAs). Execution stopped.")
     }
 
-    # Check if scores are within range [0, 3]
-    if(all(sapply(dimensions, is.numeric))){
-    if (length(dimension_columns) > 0) {
-      invalid_scores <- data %>%
-        select(all_of(dimension_columns)) %>%
-        filter(if_any(everything(), ~ . < 0 | . > 3))
+    if (all(sapply(dimensions, is.numeric))) {
+      if (length(dimension_columns) > 0) {
 
-      if (nrow(invalid_scores) > 0) {
-        shinyalert("Error!", "Some scores are outside the valid range (0 to 3).", type = "error")
-        stop("🚨 Error: Some scores are outside the valid range (0 to 3). Execution stopped.")
+        # Detect only invalid values (< 0 or > 3), but allow NAs
+        invalid_scores <- data %>%
+          select(all_of(dimension_columns)) %>%
+          filter(if_any(everything(), ~ !is.na(.) & (. < 0 | . > 3)))
+
+        # Stop execution if invalid values exist
+        if (nrow(invalid_scores) > 0) {
+          shinyalert("Error!", "Some scores are outside the valid range (0 to 3).", type = "error")
+          stop("🚨 Error: Some scores are outside the valid range (0 to 3). Execution stopped.")
+        }
       }
-    }
     }
 
     # Here also stop when text dimensions are not right!!
@@ -198,7 +200,7 @@ server <- function(input, output, session){
     # If input$output_decision = Scores
 
     if(input$output_decision == "Scores"){
-    data_mhqol <- mhqol::mhqol_LSS(dimensions = data[, dimension_columns],
+    data_mhqol <- mhqol_LSS(dimensions = data[, dimension_columns],
                                    metric = "total",
                                    ignore_invalid = TRUE,
                                    ignore_NA = TRUE)
@@ -212,7 +214,8 @@ server <- function(input, output, session){
                                ignore_invalid = TRUE,
                                ignore_NA = TRUE)
 
-
+    data_mhqol <- data_mhqol |>
+      dplyr::mutate(utility = round(utility, 3))
 
     }
 

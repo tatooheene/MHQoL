@@ -53,15 +53,14 @@ mhqol_LSS <- function(dimensions,
       # Loop through each column and validate the values
       for (col in columns_to_check) {
         if (col %in% colnames(data)) {
-          invalid_values <- data[[col]][data[[col]] < 0 | data[[col]] > 3 & !is.na(data[[col]])]
+          invalid_values <- data[[col]][!is.na(data[[col]]) & (data[[col]] < 0 | data[[col]] > 3)]
 
           if (length(invalid_values) > 0) {
-            stop(paste("Error: Column", col, "contains values outside the range [0, 3]:", paste(invalid_values, collapse = ", ")))
+            stop(paste("🚨 Error: Column", col, "contains values outside the range [0, 3]:", paste(invalid_values, collapse = ", ")))
           }
         }
       }
     }
-
 
     validate_dimensions(data)
 
