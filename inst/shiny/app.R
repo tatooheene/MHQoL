@@ -43,7 +43,19 @@ ui <-navbarPage(title = "MHQoL",
         selectInput("country_decision",
                      label = "Country",
                     choices = "Netherlands",
-                    selected = "Netherlands")),
+                    selected = "Netherlands"),
+
+         radioButtons("NA_decision",
+                 label = "Do you want to include NAs in the calculations?",
+                 choices = c("Yes", "No"),
+                 selected = "No"),
+
+         radioButtons("invalid_decision",
+                 label = "Do you want to include missing columns in the calculations?",
+                 choices = c("Yes", "No"),
+                 selected = "No")),
+
+
 
     mainPanel(
       DTOutput("data_output"),
@@ -134,12 +146,16 @@ server <- function(input, output, session){
     # Check for missing descriptive columns
     missing_columns <- setdiff(descriptive_columns, colnames(data))
     if (length(missing_columns) > 0) {
-      shinyalert("Warning!", paste("Missing required columns:", paste(missing_columns, collapse = ", ")), type = "warning")
+      shinyalert("Error!", paste("Missing required columns:", paste(missing_columns, collapse = ", ")), type = "Error")
+      stop("🚨 Error: Missing required columns. Execution stopped.")
     }
 
     # Check for missing expeceed dimension columns
-    if (length(dimension_columns) < 7) {
+    if (length(dimension_columns) < 7 & input$invalid_decision == "Yes") {
       shinyalert("Warning!", "Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing!", type = "warning")
+    }else if(length(dimension_columns) <7 & input$invalid_decision == "No"){
+      shinyalert("Error!", "Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing!", type = "error")
+      stop("🚨 Error: Some expected dimensions (SI, IN, MO, RE, DA, PH, FU) are missing! Execution stopped.")
     }
 
     # Keep only the required and available dimension columns
@@ -153,8 +169,11 @@ server <- function(input, output, session){
       dplyr::select(all_of(descriptive_columns))
 
     # Check for missing values (NAs)
-    if (any(is.na(data))) {
+    if (any(is.na(data)) & input$NA_decision == "Yes"){
       shinyalert("Warning!", "Your dataset contains missing values (NAs).", type = "warning")
+    }else if(any(is.na(data)) & input$NA_decision == "No"){
+      shinyalert("Error!", "Your dataset contains missing values (NAs).", type = "error")
+      stop("🚨 Error: Your dataset contains missing values (NAs). Execution stopped.")
     }
 
     # Check if scores are within range [0, 3]
@@ -166,9 +185,12 @@ server <- function(input, output, session){
 
       if (nrow(invalid_scores) > 0) {
         shinyalert("Error!", "Some scores are outside the valid range (0 to 3).", type = "error")
+        stop("🚨 Error: Some scores are outside the valid range (0 to 3). Execution stopped.")
       }
     }
     }
+
+    # Here also stop when text dimensions are not right!!
 
 
     # Recalculate data into scores/utilities based on the input
@@ -178,8 +200,8 @@ server <- function(input, output, session){
     if(input$output_decision == "Scores"){
     data_mhqol <- mhqol::mhqol_LSS(dimensions = data[, dimension_columns],
                                    metric = "total",
-                                   ignore.invalid = FALSE,
-                                   ignore.NA = TRUE)
+                                   ignore_invalid = TRUE,
+                                   ignore_NA = TRUE)
 
 
 
@@ -187,11 +209,10 @@ server <- function(input, output, session){
     data_mhqol <- mhqol::mhqol(dimensions = data[, dimension_columns],
                                metric = "total",
                                country = input$country_decision,
-                               ignore.invalid = FALSE,
-                               ignore.NA = TRUE)
+                               ignore_invalid = TRUE,
+                               ignore_NA = TRUE)
 
-    data_mhqol <- data_mhqol |>
-      dplyr::mutate(utility = round(utility, 3))
+
 
     }
 

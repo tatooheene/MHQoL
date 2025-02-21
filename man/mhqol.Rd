@@ -34,8 +34,8 @@ This function calculates the utility of the MHQoL based on the scores of the dif
 }
 \examples{
 # Example usage of the mhqol_utilities function
-# Get the utility based on a numeric vector and calculate the total utility, not all dimensions are present
-mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "total", ignore_invalid = TRUE)
+# Get the utility based on a numeric vector and calculate the total utility, not all dimensions and values are present
+mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = NA, PH = 2, FU = 3), metric = "total", ignore_invalid = TRUE, ignore_NA = TRUE)
 
 # Get the utility based on a dataframe and calculate the average utility
 mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "average")
