@@ -7,4 +7,5 @@ utils::globalVariables(c("SI",
                          "FU",
                          "where",
                          "flush.console",
-                         "dimensions"))
+                         "dimensions",
+                         "na.rm"))

@@ -4,7 +4,12 @@
 \alias{mhqol_utilities}
 \title{Provides the scores of the MHQoL based on the textual input (as described in the manual)}
 \usage{
-mhqol_utilities(dimensions, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
+mhqol_utilities(
+  dimensions,
+  country = "Netherlands",
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE,
+  retain_old_variables = TRUE)
 }
 \arguments{
 \item{dimensions}{A dataframe, character vector, numeric vector, or list containing
@@ -53,5 +58,5 @@ mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1),
 ignore_invalid = TRUE)
 }
 \keyword{Dimensions}
-\keyword{MHQoL,}
-\keyword{Utilities,}
+\keyword{MHQoL}
+\keyword{Utilities}

@@ -5,7 +5,12 @@
 #'
 #' @aliases mhqol_utilities_to_states
 #'
-#' @usage mhqol_utilities_to_states(utilities, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
+#' @usage mhqol_utilities_to_states(
+#'   utilities,
+#'   country = "Netherlands",
+#'   ignore_invalid = FALSE,
+#'   ignore_NA = FALSE,
+#'   retain_old_variables = TRUE)
 #'
 #' @param utilities A dataframe, numeric vector, or list containing the utilities of the MHQoL.
 #'
@@ -19,7 +24,9 @@
 #'
 #' @return A dataframe containing the states of the MHQoL based on the utilities provided.
 #'
-#' @keywords MHQoL, States, utilities
+#' @keywords MHQoL
+#' @keywords States
+#' @keywords utilities
 #'
 #' @examples
 #' # Example usage of the mhqol_utilities_to_states function
@@ -38,8 +45,6 @@ mhqol_utilities_to_states <- function(utilities,
                                       retain_old_variables = TRUE){
 
 
-  # Read in utility dataset
-  df_utilities_countries <- mhqol::df_utilities_countries
 
   # Include an warning that in future the utility 0 in the Netherlands can be both I am optimistic about my future
   if(country == "Netherlands"){

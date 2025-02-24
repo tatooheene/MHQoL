@@ -5,7 +5,11 @@
 #'
 #' @aliases mhqol_scores_to_states
 #'
-#' @usage mhqol_scores_to_states(scores, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
+#' @usage mhqol_scores_to_states(
+#'   scores,
+#'   ignore_invalid = FALSE,
+#'   ignore_NA = FALSE,
+#'   retain_old_variables = TRUE)
 #'
 #' @param scores A dataframe, numeric vector, or list containing the scores of the MHQoL.
 #'
@@ -17,7 +21,9 @@
 #'
 #' @return A dataframe containing the states of the MHQoL based on the scores provided.
 #'
-#' @keywords MHQoL, States, Scores
+#' @keywords MHQoL
+#' @keywords States
+#' @keywords Scores
 #'
 #' @examples
 #' # Example usage of the mhqol_scores_to_states function
@@ -108,7 +114,7 @@ scores <- scores[, setdiff(colnames(scores), missing_scores), drop = FALSE]
     new_scores <- scores |>
       dplyr::mutate(
         SI_s = if("SI" %in% colnames(scores)){
-          if(any(SI < 0 | SI > 3, na.rm == TRUE)) stop("Error: SI contains values outside [0,3]")
+          if(any(SI < 0 | SI > 3, na.rm = TRUE)) stop("Error: SI contains values outside [0,3]")
           dplyr::case_when(SI == 3 ~ "I think very positively about myself", # SELF-IMAGE
                            SI == 2 ~ "I think positively about myself",
                            SI == 1 ~ "I think negatively about myself",
@@ -138,7 +144,7 @@ scores <- scores[, setdiff(colnames(scores), missing_scores), drop = FALSE]
           NA_character_
         },
         RE_s = if("RE" %in% colnames(scores)){
-          if(any(RE < 0 | RE > 3, na.rm =TRUE)) stop("Error: RE contains values outside [0,3]")
+          if(any(RE < 0 | RE > 3, na.rm = TRUE)) stop("Error: RE contains values outside [0,3]")
           dplyr::case_when(RE == 3 ~ "I am very satisfied with my relationships",     # RELATIONSHIPS
                            RE == 2 ~ "I am satisfied with my relationships",
                            RE == 1 ~ "I am dissatisfied with my relationships",

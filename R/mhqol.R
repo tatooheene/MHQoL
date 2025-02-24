@@ -4,9 +4,14 @@
 #' `r lifecycle::badge("experimental")`
 #' This function calculates the utility of the MHQoL based on the scores of the different dimensions.
 #'
-#' @aliases mhqol_utilities
+#' @aliases mhqol
 #'
-#' @usage mhqol_utilities(dimensions, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
+#' @usage mhqol(
+#'   dimensions,
+#'   country = "Netherlands",
+#'   metric = c("average", "total"),
+#'   ignore_invalid = FALSE,
+#'   ignore_NA = TRUE)
 #'
 #' @param dimensions A dataframe, character vector, numeric vector, or list containing the dimensions of the MHQoL.
 #' Must contain the following dimensions: SI (Self-Image), IN (INdependence),
@@ -26,7 +31,9 @@
 #'
 #' @return A dataframe containing the utilities based on the MHQoL valuesets
 #'
-#' @keywords MHQoL, Utility, Dimensions
+#' @keywords MHQoL
+#' @keywords Utility
+#' @keywords Dimensions
 #'
 #' @examples
 #' # Example usage of the mhqol_utilities function

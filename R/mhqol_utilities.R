@@ -7,7 +7,12 @@
 #'
 #' @aliases mhqol_utilities
 #'
-#' @usage mhqol_utilities(dimensions, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
+#' @usage mhqol_utilities(
+#'   dimensions,
+#'   country = "Netherlands",
+#'   ignore_invalid = FALSE,
+#'   ignore_NA = TRUE,
+#'   retain_old_variables = TRUE)
 #'
 #' @param dimensions A dataframe, character vector, numeric vector, or list containing
 #' the character or numeric dimensions of the MHQoL.
@@ -27,7 +32,9 @@
 #'
 #' @return A dataframe containing the new utilities based on the MHQoL manual.
 #'
-#' @keywords MHQoL, Utilities, Dimensions
+#' @keywords MHQoL
+#' @keywords Utilities
+#' @keywords Dimensions
 #'
 #' @examples
 #' # Example usage of the mhqol_utilities function
@@ -58,8 +65,6 @@ mhqol_utilities <- function(dimensions,
                             ignore_NA = TRUE,
                             retain_old_variables = TRUE) {
 
-  # Read in utility dataset
-  df_utilities_countries <- mhqol::df_utilities_countries
 
   # Check if the country exists in the dataframe
   if (!country %in% names(df_utilities_countries)) {

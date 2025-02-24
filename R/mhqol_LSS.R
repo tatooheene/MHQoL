@@ -7,7 +7,11 @@
 #'
 #' @aliases mhqol_LSS
 #'
-#' @usage mhqol_LSS(dimensions, metric = c("average", "total"), ignore_invalid = FALSE, ignore_NA = TRUE
+#' @usage mhqol_LSS(
+#'   dimensions,
+#'   metric = c("average", "total"),
+#'   ignore_invalid = FALSE,
+#'   ignore_NA = TRUE)
 #'
 #' @param dimensions A dataframe, character vector or list containing the dimensions of the MHQoL.
 #' Must contain the following dimensions: SI (Self-Image), IN (INdependence),
@@ -23,7 +27,9 @@
 #'
 #' @return A dataframe containing the LSS based on the MHQoL manual.
 #'
-#' @keywords MHQoL, LSS, Dimensions
+#' @keywords MHQoL
+#' @keywords LSS
+#' @keywords Dimensions
 #'
 #' @examples
 #' # Example usage of the mhqol_LSS function

@@ -4,7 +4,11 @@
 \alias{mhqol_LSS}
 \title{A function to calculate the Level Sum Scores (LSS) of the MHQoL}
 \usage{
-mhqol_LSS(dimensions, metric = c("average", "total"), ignore_invalid = FALSE, ignore_NA = TRUE
+mhqol_LSS(
+  dimensions,
+  metric = c("average", "total"),
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE)
 }
 \arguments{
 \item{dimensions}{A dataframe, character vector or list containing the dimensions of the MHQoL.
@@ -40,5 +44,5 @@ mhqol_LSS(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2
 metric = "average")
 }
 \keyword{Dimensions}
-\keyword{LSS,}
-\keyword{MHQoL,}
+\keyword{LSS}
+\keyword{MHQoL}

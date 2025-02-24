@@ -2,10 +2,14 @@
 % Please edit documentation in R/mhqol.R
 \name{mhqol}
 \alias{mhqol}
-\alias{mhqol_utilities}
 \title{A function to calculate the utility  of the MHQoL}
 \usage{
-mhqol_utilities(dimensions, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
+mhqol(
+  dimensions,
+  country = "Netherlands",
+  metric = c("average", "total"),
+  ignore_invalid = FALSE,
+  ignore_NA = TRUE)
 }
 \arguments{
 \item{dimensions}{A dataframe, character vector, numeric vector, or list containing the dimensions of the MHQoL.
@@ -42,5 +46,5 @@ mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU
 metric = "average")
 }
 \keyword{Dimensions}
-\keyword{MHQoL,}
-\keyword{Utility,}
+\keyword{MHQoL}
+\keyword{Utility}

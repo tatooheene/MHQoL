@@ -4,7 +4,11 @@
 \alias{mhqol_scores_to_states}
 \title{Provides the states of the MHQoL based on the scores provided (as described in the manual)}
 \usage{
-mhqol_scores_to_states(scores, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
+mhqol_scores_to_states(
+  scores,
+  ignore_invalid = FALSE,
+  ignore_NA = FALSE,
+  retain_old_variables = TRUE)
 }
 \arguments{
 \item{scores}{A dataframe, numeric vector, or list containing the scores of the MHQoL.}
@@ -29,6 +33,6 @@ mhqol_scores_to_states(scores = c(IN = 2, DA = 1, PH = 2, FU = 3), ignore_invali
 # Get the states based on a dataframe
 mhqol_scores_to_states(scores = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3))
 }
-\keyword{MHQoL,}
+\keyword{MHQoL}
 \keyword{Scores}
-\keyword{States,}
+\keyword{States}

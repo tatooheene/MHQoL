@@ -12,7 +12,9 @@
 #'
 #' @return A dataframe containing the valueset of the MHQoL based on the country specified.
 #'
-#' @keywords MHQoL, Valueset, Country
+#' @keywords MHQoL
+#' @keywords Valueset
+#' @keywords Country
 #'
 #' @examples
 #' # Example usage of the mhqol_valueset function
@@ -21,8 +23,6 @@
 
 mhqol_valueset <- function(country = "Netherlands"){
 
-# Read in the data frame
-df_utilities_countries <- mhqol::df_utilities_countries
 
 # Check if the country is a single value
 if (length(country) != 1) {

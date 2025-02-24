@@ -22,5 +22,5 @@ This function provides the valueset of the MHQoL based on the country specified.
 mhqol_valueset(country = "Netherlands")
 }
 \keyword{Country}
-\keyword{MHQoL,}
-\keyword{Valueset,}
+\keyword{MHQoL}
+\keyword{Valueset}

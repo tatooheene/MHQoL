@@ -4,7 +4,7 @@ Version: 0.3.0
 Authors@R: c(
     person("Stijn", "Peeters", email = "s.b.peeters@eshpm.eur.nl", role = c("aut", "cre"),comment = c(ORCID = "0009-0004-3684-3584")),
     person("Frederick", "Thielen", email = "thielen@eshpm.eur.nl", role = c("aut"), comment = c(ORCID = "0000-0002-0312-5891")))
-Description: Functions to support the transformation, calculation and presentation of the Mental Health Quality of Life Questionnaire <https://www.imta.nl/questionnaires/mhqol/>
+Description: This package provides functions to support the transformation, calculation, and presentation of the Mental Health Quality of Life Questionnaire (MHQoL). More details can be found at <https://www.imta.nl/questionnaires/mhqol/>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

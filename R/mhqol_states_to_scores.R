@@ -6,7 +6,11 @@
 #'
 #' @aliases mhqol_states_to_scores
 #'
-#' @usage mhqol_states_to_scores(states, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
+#' @usage mhqol_states_to_scores(
+#'   states,
+#'   ignore_invalid = FALSE,
+#'   ignore_NA = FALSE,
+#'   retain_old_variables = TRUE)
 #'
 #' @param states A dataframe, character vector or list containing the states of the MHQoL.
 #' Must contain the following states: SI (Self-Image), IN (INdependence),
@@ -23,7 +27,9 @@
 #'
 #' @return A dataframe containing the new scores based on the MHQoL manual.
 #'
-#' @keywords MHQoL, Scores, states
+#' @keywords MHQoL
+#' @keywords Scores
+#' @keywords States
 #'
 #' @examples
 #' # Example usage of the mhqol_scores function
