@@ -53,12 +53,6 @@ mhqol_utilities(
    retain_old_variables = FALSE
 )
 
-# Get the MHQoL utilities based on a DataFrame and retain old values
-mhqol_utilities(dimensions = df)
-
-# Get the MHQoL utilities based on a DataFrame and ignore missing dimensions
-mhqol_utilities(dimensions = df, ignore_invalid = TRUE)
-
 # Get the MHQoL utilities based on a numeric vector and ignore missing dimensions
 mhqol_utilities(
   dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1),
