@@ -5,4 +5,5 @@ export(mhqol,
        mhqol_utilities_to_states,
        mhqol_utilities_to_scores,
        mhqol_states_to_scores,
-       mhqol_scores_to_states)
+       mhqol_scores_to_states,
+       shiny_mhqol)
