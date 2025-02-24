@@ -3,6 +3,10 @@
 #' @description
 #' This function provides the valueset of the MHQoL based on the country specified.
 #'
+#' @aliases mhqol_valueset
+#'
+#' @usage mhqol_valueset(country)
+#'
 #' @param country A character value indicating the country for which the valueset should be provided.
 #' For now only the Netherlands is available.
 #'

@@ -4,13 +4,7 @@
 \alias{mhqol_utilities_to_scores}
 \title{Provides the scores of the MHQoL based on the utilities provided (as described in the valueset)}
 \usage{
-mhqol_utilities_to_scores(
-  utilities,
-  country = "Netherlands",
-  ignore_invalid = FALSE,
-  ignore_NA = TRUE,
-  retain_old_variables = TRUE
-)
+mhqol_utilities_to_scores(utilities, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
 }
 \arguments{
 \item{utilities}{A dataframe, numeric vector, or list containing the utilities of the MHQoL.}
@@ -32,10 +26,12 @@ This function provides the scores of the MHQoL based on the utilities provided (
 \examples{
 # Example usage of the mhqol_utilities_to_scores function
 # Get the scores based on a numeric vector, not all utilities are present
-mhqol_utilities_to_scores(utilities = c(IN = -0.018, DA = -0.021, PH = -0.064, FU = -0.106), ignore_invalid = TRUE)
+mhqol_utilities_to_scores(utilities = c(IN = -0.018, DA = -0.021, PH = -0.064, FU = -0.106),
+ignore_invalid = TRUE)
 
 # Get the scores based on a dataframe
-mhqol_utilities_to_scores(utilities = data.frame(SI = -0.137, IN = -0.184, MO = -0.063, RE = -0.172, DA = -0.021, PH = -0.243, FU = -0.170))
+mhqol_utilities_to_scores(utilities = data.frame(SI = -0.137, IN = -0.184,
+MO = -0.063, RE = -0.172, DA = -0.021, PH = -0.243, FU = -0.170))
 }
 \keyword{MHQoL,}
 \keyword{States,}

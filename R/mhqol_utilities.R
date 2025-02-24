@@ -5,6 +5,10 @@
 #' This function provides the utilities of the MHQoL based on
 #' textual, as described in the manual, or numeric input of the MHQoL.
 #'
+#' @aliases mhqol_utilities
+#'
+#' @usage mhqol_utilities(dimensions, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
+#'
 #' @param dimensions A dataframe, character vector, numeric vector, or list containing
 #' the character or numeric dimensions of the MHQoL.
 #' Must contain the following dimensions: SI (Self-Image), IN (INdependence),
@@ -34,7 +38,7 @@
 #' RE = "I am very satisfied with my relationships",
 #' DA = "I am very satisfied with my daily activities",
 #' PH = "I have no physical health problems",
-#' FU = "I am very optimistic about my future"), retain_old_variables = FALSE))
+#' FU = "I am very optimistic about my future"), retain_old_variables = FALSE)
 #'
 #' # Get the MHQoL utilities based on a DataFrame and retain old values
 #' mhqol_utilities(dimensions = df)
@@ -43,7 +47,8 @@
 #' mhqol_utilities(dimensions = df, ignore_invalid = TRUE)
 #'
 #' Get the MHQoL utilities based on a numeric vector and ignore missing dimensions
-#' mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1), ignore_invalid = TRUE)
+#' mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1),
+#' ignore_invalid = TRUE)
 
 
 

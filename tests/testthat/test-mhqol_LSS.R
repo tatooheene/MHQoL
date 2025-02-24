@@ -4,38 +4,41 @@
 
 # Test whether the function returns an error when there is a score below zero in the data
 test_that("Test whether the function returns an error when there is a score below zero in the data", {
-  expect_error(mhqol_LSS(scores = data.frame(SI = c(3,2,1,0),
+  expect_error(mhqol_LSS(dimensions = data.frame(SI = c(3,2,1,0),
                                                           IN = c(3,2,1,0),
                                                           MO = c(3,2,1,0),
                                                           RE = c(3,2,1,0),
                                                           DA = c(3,2,1,0),
                                                           PH = c(3,2,1,-1),
-                                                          FU = c(3,2,1,0))))
+                                                          FU = c(3,2,1,0)),
+                         metric = "total"))
 
 })
 
 # Test whether the function returns an error when there is a score above 3 in the data
 test_that("Test whether the function returns an error when there is a score above 3 in the data", {
-  expect_error(mhqol_scores_to_states(scores = data.frame(SI = c(3,2,1,0),
+  expect_error(mhqol_LSS(dimensions = data.frame(SI = c(3,2,1,0),
                                                           IN = c(3,2,1,0),
                                                           MO = c(3,2,1,0),
                                                           RE = c(3,2,1,0),
                                                           DA = c(3,2,1,0),
                                                           PH = c(3,2,1,4),
-                                                          FU = c(3,2,1,0))))
+                                                          FU = c(3,2,1,0)),
+                         metric = "total"))
 
 })
 
 
 # Test whether the function returns no error when the scores are between 0 - 3
 test_that("Test whether the function returns no  error when the scores are between 0 and 3 in the data", {
-  expect_no_error(mhqol_scores_to_states(scores = data.frame(SI = c(3,2,1,0),
-                                                          IN = c(3,2,1,0),
-                                                          MO = c(3,2,1,0),
-                                                          RE = c(3,2,1,0),
-                                                          DA = c(3,2,1,0),
-                                                          PH = c(3,2,1,0),
-                                                          FU = c(3,2,1,0))))
+  expect_no_error(mhqol_LSS(dimensions = data.frame(SI = c(3,2,1,0),
+                                                IN = c(3,2,1,0),
+                                                MO = c(3,2,1,0),
+                                                RE = c(3,2,1,0),
+                                                DA = c(3,2,1,0),
+                                                PH = c(3,2,1,0),
+                                                FU = c(3,2,1,0)),
+                            metric = "total"))
 
 })
 

@@ -4,6 +4,10 @@
 #' `r lifecycle::badge("experimental")`
 #' This function provides the scores of the MHQoL based on textual input as described in the manual of the MHQoL.
 #'
+#' @aliases mhqol_states_to_scores
+#'
+#' @usage mhqol_states_to_scores(states, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
+#'
 #' @param states A dataframe, character vector or list containing the states of the MHQoL.
 #' Must contain the following states: SI (Self-Image), IN (INdependence),
 #' MO (MOod), RE (RElationships), DA (Daily Activities), PH (Physical Health), FU (FUture).
@@ -30,7 +34,7 @@
 #' RE = "I am very satisfied with my relationships",
 #' DA = "I am very satisfied with my daily activities",
 #' PH = "I have no physical health problems",
-#' FU = "I am very optimistic about my future"), retain_old_variables = FALSE))
+#' FU = "I am very optimistic about my future"), retain_old_variables = FALSE)
 #'
 #' # Get the MHQoL scores based on a DataFrame and retain old values
 #' mhqol_scores(states = df)

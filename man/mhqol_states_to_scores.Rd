@@ -4,12 +4,7 @@
 \alias{mhqol_states_to_scores}
 \title{Provides the scores of the MHQoL based on the textual input (as described in the manual)}
 \usage{
-mhqol_states_to_scores(
-  states,
-  ignore_invalid = FALSE,
-  ignore_NA = FALSE,
-  retain_old_variables = TRUE
-)
+mhqol_states_to_scores(states, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
 }
 \arguments{
 \item{states}{A dataframe, character vector or list containing the states of the MHQoL.
@@ -41,7 +36,7 @@ MO = "I do not feel anxious, gloomy, or depressed",
 RE = "I am very satisfied with my relationships",
 DA = "I am very satisfied with my daily activities",
 PH = "I have no physical health problems",
-FU = "I am very optimistic about my future"), retain_old_variables = FALSE))
+FU = "I am very optimistic about my future"), retain_old_variables = FALSE)
 
 # Get the MHQoL scores based on a DataFrame and retain old values
 mhqol_scores(states = df)

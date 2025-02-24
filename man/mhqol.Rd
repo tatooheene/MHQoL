@@ -2,20 +2,18 @@
 % Please edit documentation in R/mhqol.R
 \name{mhqol}
 \alias{mhqol}
+\alias{mhqol_utilities}
 \title{A function to calculate the utility  of the MHQoL}
 \usage{
-mhqol(
-  dimensions,
-  country = "Netherlands",
-  metric = c("average", "total"),
-  ignore_invalid = FALSE,
-  ignore_NA = FALSE
-)
+mhqol_utilities(dimensions, country = "Netherlands", ignore_invalid = FALSE, ignore_NA = TRUE, retain_old_variables = TRUE)
 }
 \arguments{
 \item{dimensions}{A dataframe, character vector, numeric vector, or list containing the dimensions of the MHQoL.
 Must contain the following dimensions: SI (Self-Image), IN (INdependence),
 MO (MOod), RE (RElationships), DA (Daily Activities), PH (Physical Health), FU (FUture).}
+
+\item{country}{A character value indicating the country for which the utilities
+should be calculated. Standard is the Netherlands}
 
 \item{metric}{A character value indicating whether to calculate the "total" or "average" utility.}
 
@@ -34,11 +32,14 @@ This function calculates the utility of the MHQoL based on the scores of the dif
 }
 \examples{
 # Example usage of the mhqol_utilities function
-# Get the utility based on a numeric vector and calculate the total utility, not all dimensions and values are present
-mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = NA, PH = 2, FU = 3), metric = "total", ignore_invalid = TRUE, ignore_NA = TRUE)
+# Get the utility based on a numeric vector and calculate the total utility,
+# not all dimensions and values are present
+mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = NA, PH = 2, FU = 3),
+metric = "total", ignore_invalid = TRUE, ignore_NA = TRUE)
 
 # Get the utility based on a dataframe and calculate the average utility
-mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3), metric = "average")
+mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3),
+metric = "average")
 }
 \keyword{Dimensions}
 \keyword{MHQoL,}

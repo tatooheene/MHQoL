@@ -122,7 +122,7 @@ test_that("Test whether when retain_old_variables = TRUE, the function also retu
                                                           "I am satisfied with my daily activities"),
                                                    PH = c("I have no physical health problems",
                                                           "I have no physical health problems",
-                                                          "I have physical health problems"),
+                                                          "I have some physical health problems"),
                                                    FU = c("I am very optimistic about my future",
                                                           "I am very optimistic about my future",
                                                           "I am optimistic about my future")), retain_old_variables = TRUE)
@@ -152,7 +152,7 @@ test_that("Test whether when retain_old_variables = FALSE, the function does not
                                                           "I am satisfied with my daily activities"),
                                                    PH = c("I have no physical health problems",
                                                           "I have no physical health problems",
-                                                          "I have physical health problems"),
+                                                          "I have some physical health problems"),
                                                    FU = c("I am very optimistic about my future",
                                                           "I am very optimistic about my future",
                                                           "I am optimistic about my future")), retain_old_variables = FALSE)

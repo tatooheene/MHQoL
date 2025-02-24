@@ -22,7 +22,3 @@ df_utilities_countries <- data.frame(dimensions, Netherlands)
 
 # Save the dataset
 usethis::use_data(df_utilities_countries, overwrite = TRUE)
-
-## VOOR NU LATER WEGHALEN
-
-saveRDS(object = df_utilities_countries, "data/df_utilities_countries.RDS")

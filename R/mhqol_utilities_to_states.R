@@ -3,6 +3,10 @@
 #' @description
 #' This function provides the states of the MHQoL based on the utilities provided (as described in the valueset).
 #'
+#' @aliases mhqol_utilities_to_states
+#'
+#' @usage mhqol_utilities_to_states(utilities, ignore_invalid = FALSE, ignore_NA = FALSE, retain_old_variables = TRUE)
+#'
 #' @param utilities A dataframe, numeric vector, or list containing the utilities of the MHQoL.
 #'
 #' @param country The country for which the utilities should be calculated. For now the only option is "Netherlands".
@@ -20,10 +24,12 @@
 #' @examples
 #' # Example usage of the mhqol_utilities_to_states function
 #' # Get the states based on a numeric vector, not all states are present
-#' mhqol_utilities_to_states(utilities = c(IN = -0.018, DA = -0.021, PH = -0.064, FU = -0.106), ignore_invalid = TRUE)
+#' mhqol_utilities_to_states(utilities = c(IN = -0.018, DA = -0.021,
+#' PH = -0.064, FU = -0.106), ignore_invalid = TRUE)
 #'
 #' # Get the states based on a dataframe
-#' mhqol_utilities_to_states(utilities = data.frame(SI = -0.137, IN = -0.184, MO = -0.063, RE = -0.172, DA = -0.021, PH = -0.243, FU = -0.170))
+#' mhqol_utilities_to_states(utilities = data.frame(SI = -0.137, IN = -0.184,
+#' MO = -0.063, RE = -0.172, DA = -0.021, PH = -0.243, FU = -0.170))
 
 mhqol_utilities_to_states <- function(utilities,
                                       country = "Netherlands",
@@ -38,7 +44,7 @@ mhqol_utilities_to_states <- function(utilities,
   # Include an warning that in future the utility 0 in the Netherlands can be both I am optimistic about my future
   if(country == "Netherlands"){
     warning("In the Netherlands, the utility 0 in the Future dimension can be both 'I am optimistic about my future' and 'I am very optimistic about my future'")
-    flush.console()
+    utils::flush.console()
   }
 
   # Convert the different input types into a dataframe

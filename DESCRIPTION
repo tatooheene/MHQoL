@@ -1,17 +1,16 @@
 Package: mhqol
 Title: Mental Health Quality of Life Toolkit
 Version: 0.2.0
-Author: c(
-    person("Stijn", "Peeters", "s.b.peeters@eshpm.eur.nl", role = c("aut", "cre"),comment = c(ORCID = "0009-0004-3684-3584"))
-    person("Frederick", "Thielen","thielen@eshpm.eur.nl", role = c("aut"), comment = c(ORCID = "0000-0002-0312-5891")))
-Description: Functions to support the transformation, calculation and presentation of the 
-    Mental Health Quality of Life Questionnaire <https://www.imta.nl/questionnaires/mhqol/>
+Authors@R: c(
+    person("Stijn", "Peeters", email = "s.b.peeters@eshpm.eur.nl", role = c("aut", "cre"),comment = c(ORCID = "0009-0004-3684-3584")),
+    person("Frederick", "Thielen", email = "thielen@eshpm.eur.nl", role = c("aut"), comment = c(ORCID = "0000-0002-0312-5891")))
+Description: Functions to support the transformation, calculation and presentation of the Mental Health Quality of Life Questionnaire <https://www.imta.nl/questionnaires/mhqol/>
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 LazyData: true
 Imports:
     dplyr (>= 1.1.4),
@@ -24,7 +23,6 @@ Imports:
     fmsb (>= 0.7.6)
 Suggests:
     here,
-    writexl,
     stats,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

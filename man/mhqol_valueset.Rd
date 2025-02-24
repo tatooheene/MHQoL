@@ -4,7 +4,7 @@
 \alias{mhqol_valueset}
 \title{Provides the valueset of the MHQoL based on the country specified}
 \usage{
-mhqol_valueset(country = "Netherlands")
+mhqol_valueset(country)
 }
 \arguments{
 \item{country}{A character value indicating the country for which the valueset should be provided.
