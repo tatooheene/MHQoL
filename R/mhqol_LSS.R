@@ -57,7 +57,7 @@ mhqol_LSS <- function(dimensions,
 
   # Convert character dimensions to numeric scores
   if (all(sapply(dimensions, is.character))) {
-    data <- mhqol::mhqol_states_to_scores(states = dimensions,
+    data <- MHQoL::mhqol_states_to_scores(states = dimensions,
                                           ignore_invalid = ignore_invalid,
                                           ignore_NA = ignore_NA,
                                           retain_old_variables = FALSE)

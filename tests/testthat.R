@@ -7,7 +7,7 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(mhqol)
+library(MHQoL)
 
-test_check("mhqol")
+test_check("MHQoL")
 

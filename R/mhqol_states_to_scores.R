@@ -34,7 +34,7 @@
 #' @examples
 #' # Example usage of the mhqol_scores function
 #' # Get the MHQoL scores based on a character vector and do not retain old values
-#' mhqol_scores(
+#' mhqol_states_to_scores(
 #'   states = c(
 #'     SI = "I think very positively about myself",
 #'     IN = "I am very satisfied with my level of independence",
@@ -48,10 +48,10 @@
 #' )
 #'
 #' # Get the MHQoL scores based on a DataFrame and retain old values
-#' mhqol_scores(states = df)
+#' mhqol_states_to_scores(states = df)
 #'
 #' # Get the MHQoL scores based on a DataFrame and ignore missing states
-#' mhqol_scores(states = df, ignore_invalid = TRUE)
+#' mhqol_states_to_scores(states = df, ignore_invalid = TRUE)
 
 
 mhqol_states_to_scores <- function(states,

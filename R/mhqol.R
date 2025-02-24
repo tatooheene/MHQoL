@@ -73,7 +73,7 @@ mhqol     <- function(dimensions,
 
   # Check whether the input are characters or numeric
 
-  data <-  mhqol::mhqol_utilities(dimensions = dimensions,
+  data <-  MHQoL::mhqol_utilities(dimensions = dimensions,
                            country = country,
                            ignore_invalid = ignore_invalid,
                            ignore_NA = ignore_NA,
