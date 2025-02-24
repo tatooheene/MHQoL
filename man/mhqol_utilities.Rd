@@ -38,14 +38,20 @@ textual, as described in the manual, or numeric input of the MHQoL.
 }
 \examples{
 # Example usage of the mhqol_utilities function
+
 # Get the MHQoL utilities based on a character vector and do not retain old values
-mhqol_utilities(dimensions = c(SI = "I think very positively about myself",
-IN = "I am very satisfied with my level of independence",
-MO = "I do not feel anxious, gloomy, or depressed",
-RE = "I am very satisfied with my relationships",
-DA = "I am very satisfied with my daily activities",
-PH = "I have no physical health problems",
-FU = "I am very optimistic about my future"), retain_old_variables = FALSE)
+mhqol_utilities(
+  dimensions = c(
+    SI = "I think very positively about myself",
+    IN = "I am very satisfied with my level of independence",
+    MO = "I do not feel anxious, gloomy, or depressed",
+    RE = "I am very satisfied with my relationships",
+    DA = "I am very satisfied with my daily activities",
+    PH = "I have no physical health problems",
+    FU = "I am very optimistic about my future"
+   ),
+   retain_old_variables = FALSE
+)
 
 # Get the MHQoL utilities based on a DataFrame and retain old values
 mhqol_utilities(dimensions = df)
@@ -53,9 +59,11 @@ mhqol_utilities(dimensions = df)
 # Get the MHQoL utilities based on a DataFrame and ignore missing dimensions
 mhqol_utilities(dimensions = df, ignore_invalid = TRUE)
 
-Get the MHQoL utilities based on a numeric vector and ignore missing dimensions
-mhqol_utilities(dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1),
-ignore_invalid = TRUE)
+# Get the MHQoL utilities based on a numeric vector and ignore missing dimensions
+mhqol_utilities(
+  dimensions = c(IN = 2, MO = 1, RE = 0, DA = 3, PH = 2, FU = 1),
+  ignore_invalid = TRUE
+)
 }
 \keyword{Dimensions}
 \keyword{MHQoL}

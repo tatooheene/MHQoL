@@ -31,12 +31,23 @@
 #' @examples
 #' # Example usage of the mhqol_utilities_to_states function
 #' # Get the states based on a numeric vector, not all states are present
-#' mhqol_utilities_to_states(utilities = c(IN = -0.018, DA = -0.021,
-#' PH = -0.064, FU = -0.106), ignore_invalid = TRUE)
+#' mhqol_utilities_to_states(
+#'   utilities = c(IN = -0.018, DA = -0.021, PH = -0.064, FU = -0.106),
+#'   ignore_invalid = TRUE
+#' )
 #'
 #' # Get the states based on a dataframe
-#' mhqol_utilities_to_states(utilities = data.frame(SI = -0.137, IN = -0.184,
-#' MO = -0.063, RE = -0.172, DA = -0.021, PH = -0.243, FU = -0.170))
+#' mhqol_utilities_to_states(
+#'   utilities = data.frame(
+#'     SI = -0.137,
+#'     IN = -0.184,
+#'     MO = -0.063,
+#'     RE = -0.172,
+#'     DA = -0.021,
+#'     PH = -0.243,
+#'     FU = -0.170
+#'     )
+#' )
 
 mhqol_utilities_to_states <- function(utilities,
                                       country = "Netherlands",

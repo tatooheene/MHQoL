@@ -28,10 +28,23 @@
 #' @examples
 #' # Example usage of the mhqol_scores_to_states function
 #' # Get the states based on a numeric vector, not all scores are present
-#' mhqol_scores_to_states(scores = c(IN = 2, DA = 1, PH = 2, FU = 3), ignore_invalid = TRUE)
+#' mhqol_scores_to_states(
+#'   scores = c(IN = 2, DA = 1, PH = 2, FU = 3),
+#'   ignore_invalid = TRUE
+#' )
 #'
 #' # Get the states based on a dataframe
-#' mhqol_scores_to_states(scores = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3))
+#' mhqol_scores_to_states(
+#'   scores = data.frame(
+#'     SI = 1,
+#'     IN = 2,
+#'     MO = 3,
+#'     RE = 2,
+#'     DA = 1,
+#'     PH = 2,
+#'     FU = 3
+#'     )
+#'  )
 
 mhqol_scores_to_states  <- function(scores,
                                    ignore_invalid = FALSE,

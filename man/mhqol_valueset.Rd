@@ -18,6 +18,7 @@ This function provides the valueset of the MHQoL based on the country specified.
 }
 \examples{
 # Example usage of the mhqol_valueset function
+
 # Get the valueset for the Netherlands
 mhqol_valueset(country = "Netherlands")
 }

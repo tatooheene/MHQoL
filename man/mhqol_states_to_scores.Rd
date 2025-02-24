@@ -34,13 +34,18 @@ This function provides the scores of the MHQoL based on textual input as describ
 \examples{
 # Example usage of the mhqol_scores function
 # Get the MHQoL scores based on a character vector and do not retain old values
-mhqol_scores(states = c(SI = "I think very positively about myself",
-IN = "I am very satisfied with my level of independence",
-MO = "I do not feel anxious, gloomy, or depressed",
-RE = "I am very satisfied with my relationships",
-DA = "I am very satisfied with my daily activities",
-PH = "I have no physical health problems",
-FU = "I am very optimistic about my future"), retain_old_variables = FALSE)
+mhqol_scores(
+  states = c(
+    SI = "I think very positively about myself",
+    IN = "I am very satisfied with my level of independence",
+    MO = "I do not feel anxious, gloomy, or depressed",
+    RE = "I am very satisfied with my relationships",
+    DA = "I am very satisfied with my daily activities",
+    PH = "I have no physical health problems",
+    FU = "I am very optimistic about my future"
+    ),
+  retain_old_variables = FALSE
+)
 
 # Get the MHQoL scores based on a DataFrame and retain old values
 mhqol_scores(states = df)

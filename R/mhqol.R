@@ -11,7 +11,7 @@
 #'   country = "Netherlands",
 #'   metric = c("average", "total"),
 #'   ignore_invalid = FALSE,
-#'   ignore_NA = TRUE)
+#'   ignore_NA = FALSE)
 #'
 #' @param dimensions A dataframe, character vector, numeric vector, or list containing the dimensions of the MHQoL.
 #' Must contain the following dimensions: SI (Self-Image), IN (INdependence),
@@ -37,14 +37,21 @@
 #'
 #' @examples
 #' # Example usage of the mhqol_utilities function
+#'
 #' # Get the utility based on a numeric vector and calculate the total utility,
 #' # not all dimensions and values are present
-#' mhqol(dimensions = c(IN = 2, MO = 3, RE = 2, DA = NA, PH = 2, FU = 3),
-#' metric = "total", ignore_invalid = TRUE, ignore_NA = TRUE)
+#' mhqol(
+#'   dimensions = c(IN = 2, MO = 3, RE = 2, DA = NA, PH = 2, FU = 3),
+#'   metric = "total",
+#'   ignore_invalid = TRUE,
+#'   ignore_NA = TRUE
+#'   )
 #'
 #' # Get the utility based on a dataframe and calculate the average utility
-#' mhqol(dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3),
-#' metric = "average")
+#' mhqol(
+#'   dimensions = data.frame(SI = 1, IN = 2, MO = 3, RE = 2, DA = 1, PH = 2, FU = 3),
+#'   metric = "average"
+#'   )
 
 
 mhqol     <- function(dimensions,
