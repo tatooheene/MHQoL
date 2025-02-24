@@ -48,7 +48,20 @@ mhqol_states_to_scores(
 )
 
 # Get the MHQoL scores based on a DataFrame and retain old values
+# Define a sample DataFrame before using it
+df <- data.frame(
+  SI = "I think positively about myself",
+  IN = "I am satisfied with my level of independence",
+  MO = "I feel a little anxious, gloomy, or depressed",
+  RE = "I am satisfied with my relationships",
+  DA = "I am satisfied with my daily activities",
+  PH = "I have some physical health problems",
+  FU = "I am optimistic about my future"
+)
+
+# Get the MHQoL scores based on a DataFrame
 mhqol_states_to_scores(states = df)
+
 
 # Get the MHQoL scores based on a DataFrame and ignore missing states
 mhqol_states_to_scores(states = df, ignore_invalid = TRUE)
