@@ -4,7 +4,7 @@ Version: 0.10.0
 Authors@R: c(
     person("Stijn", "Peeters", email = "s.b.peeters@eshpm.eur.nl", role = c("aut", "cre"),comment = c(ORCID = "0009-0004-3684-3584")),
     person("Frederick", "Thielen", email = "thielen@eshpm.eur.nl", role = c("aut"), comment = c(ORCID = "0000-0002-0312-5891")))
-Description: Functions for transforming, calculating, and presenting results from the Mental Health Quality of Life Questionnaire (MHQoL). More details can be found at <https://www.imta.nl/questionnaires/mhqol/>.
+Description: Transforms, calculates, and presents results from the Mental Health Quality of Life Questionnaire (MHQoL), a measure of health-related quality of life for individuals with mental health conditions. Provides scoring functions, summary statistics, and visualization tools to facilitate interpretation. For more details see van Krugten et al. <doi:10.1007/s11136-021-02935-w>.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
