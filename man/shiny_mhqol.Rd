@@ -20,8 +20,8 @@ This function starts the Shiny app for Mental Health Quality of Life (MHQoL) sco
 allowing users to interactively input data and calculate utility scores.
 }
 \examples{
-\dontrun{
-shiny_mhqol()
-shiny_mhqol(display.mode = "normal")
+if(interactive()) {
+  shiny_mhqol()
+  shiny_mhqol(display.mode = "normal")
 }
 }
