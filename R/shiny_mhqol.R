@@ -19,7 +19,7 @@ shiny_mhqol <- function(display.mode = "normal") {
   if (interactive()) {
     # List of required packages
     pkgs <- c(
-      "shiny", "tidyverse", "DT", "writexl", "mhqol",
+      "shiny", "tidyverse", "DT", "writexl", "MHQoL",
       "fmsb", "here", "shinyalert"
     )
 
