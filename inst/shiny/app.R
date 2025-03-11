@@ -208,7 +208,7 @@ server <- function(input, output, session){
 
 
     } else if(input$output_decision == "Utilities"){
-    data_mhqol <- mhqol::mhqol(dimensions = data[, dimension_columns],
+    data_mhqol <- mhqol(dimensions = data[, dimension_columns],
                                metric = "total",
                                country = input$country_decision,
                                ignore_invalid = TRUE,
@@ -330,13 +330,13 @@ server <- function(input, output, session){
 
 
       if(input$input_decision == "Scores"){
-        data_mhqol_rev <- mhqol::mhqol_scores_to_states(scores = data_rev[, 3:9],
+        data_mhqol_rev <- mhqol_scores_to_states(scores = data_rev[, 3:9],
                                        retain_old_variables = FALSE)
 
 
 
       } else if(input$input_decision == "Utilities"){
-        data_mhqol_rev <- mhqol::mhqol_utilities_to_states(utilities = data_rev[, 3:9],
+        data_mhqol_rev <- mhqol_utilities_to_states(utilities = data_rev[, 3:9],
                                                            country = input$country_decision_rev,
                                                            retain_old_variables = FALSE)
 
