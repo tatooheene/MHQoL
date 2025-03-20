@@ -108,7 +108,7 @@ server <- function(input, output, session){
 
   options(shiny.sanitize.errors = FALSE)
 
-  addResourcePath('example-data', here::here("inst/extdata"))
+  addResourcePath('example-data', system.file("extdata", package = "MHQoL"))
 
 
 
